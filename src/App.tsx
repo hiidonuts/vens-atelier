@@ -594,7 +594,7 @@ const TerminalHobbies = () => {
         {isDone && (
           <>
             <div className="text-[10px] text-orange-500/60 uppercase tracking-[0.2em] font-mono">Available Commands</div>
-            <div className="text-[10px] opacity-50 font-mono tracking-widest">about, skills, contact, secret, clear</div>
+            <div className="text-[10px] opacity-50 font-mono tracking-widest">help, about, skills, contact, secret, clear</div>
           </>
         )}
       </div>
@@ -1290,7 +1290,7 @@ export default function App() {
       {/* Info Section */}
       <section ref={infoRef} className="py-32 px-6 relative z-10">
         <div className="max-w-7xl mx-auto flex flex-col gap-32">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-20">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-20 items-start">
             <div>
               <span className="text-[11px] font-bold tracking-[0.3em] uppercase opacity-30 mb-8 block">
                 Philosophy
@@ -1310,8 +1310,8 @@ export default function App() {
                 <LastUpdated />
               </div>
             </div>
-            <div className="flex flex-col justify-end gap-12">
-              <div className="flex flex-col md:flex-row gap-12 md:gap-20">
+            <div className="flex flex-col justify-start gap-1 pt-13">
+              <div className="flex flex-col md:flex-row gap-12 md:gap-20 items-start">
                 <div className="flex flex-col gap-8">
                   <VisitorCounter />
                   <div>
@@ -1326,7 +1326,7 @@ export default function App() {
                   </div>
                 </div>
 
-                <div className="h-px md:h-80 w-full md:w-px bg-current opacity-10" />
+                <div className="h-px md:h-75 w-full md:w-px bg-current opacity-10" />
 
                 <div className="flex flex-col gap-8">
                   <div>
