@@ -1,0 +1,249 @@
+[
+  {
+    "id": 1,
+    "type": "Projects",
+    "title": "VEN'S ATELIER",
+    "year": "Feb. - Mar. 2026",
+    "category": "Interactive",
+    "image": "/atelier/atelier.png",
+    "images": [
+      "/atelier/atelier.png",
+      "/atelier/atelier2.png",
+      "/atelier/atelier3.png"
+    ],
+    "description": "Personal portfolio website to showcase my skills and projects. p.s. You're accessing it right now!",
+    "stack": ["GSAP", "Framer Motion", "React", "Node.js"],
+    "demoUrl": null
+  },
+  {
+    "id": 2,
+    "type": "Projects",
+    "title": "KAIRO",
+    "year": "Feb. 2026 - Present",
+    "category": "AI & Intelligent Systems",
+    "image": "/kairo/kairo.png",
+    "images": [
+      "/kairo/kairo.png",
+      "/kairo/kairo2.png"
+    ],
+    "description": "AI-powered Personal Knowledge Management (PKM) desktop application to upload study materials, generate summaries, knowledge graphs, flashcards and quizzes. Built in AI assistant to guide users on their study materials. Adapts to user's topic mastery level and proficiency to provide targeted learning routes. Multi-language support.",
+    "stack": ["Tauri", "PostgreSQL", "TypeScript", "FastAPI"],
+    "demoUrl": null
+  },
+  {
+    "id": 3,
+    "type": "Projects",
+    "title": "PRESSED.",
+    "year": "Feb. - Mar. 2026",
+    "category": "Commerce & Platforms",
+    "image": "/pressed/pressed.png",
+    "description": "Modern e-commerce vinyl store for collectors alike. Browse catalog, save to collection, rate, and purchase vinyl records through Stripe and view real-time order tracking. Admin dashboard to manage inventory through Discogs API, track orders and revenue statistics.",
+    "stack": ["Stripe", "Discogs API", "Vite", "React"],
+    "demoUrl": null,
+    "images": [
+      "/pressed/pressed.png",
+      "/pressed/pressed2.png",
+      "/pressed/pressed3.png",
+      "/pressed/pressed4.png",
+      "/pressed/pressed5.png",
+      "/pressed/pressed6.png"
+    ]
+  },
+  {
+    "id": 4,
+    "type": "Projects",
+    "title": "ESSENCE",
+    "year": "Jan. - Feb. 2026",
+    "category": "AI & Intelligent Systems",
+    "image": "/essence/essence.png",
+    "description": "AI assistant that provides contextual and factual information with citations. Responses are tailored based on user's custom preferences. Supports wide range of languages, e.g. Japanese, Korean, Dutch, etc.",
+    "stack": ["MERN Stack", "OpenRouter API", "Tailwind CSS"],
+    "demoUrl": "https://example.com/synth",
+    "images": [
+      "/essence/essence.png",
+      "/essence/essence2.png"
+    ]
+  },
+  {
+    "id": 5,
+    "type": "Projects",
+    "title": "SOLAR SYSTEM 3D",
+    "year": "Feb. 2026",
+    "category": "Creative Dev",
+    "image": "/solar/solar.png",
+    "description": "Interactive 3D visualisation of the solar system, featuring real orbital mechanics based on Kepler's equations.",
+    "stack": ["Three.js", "WebGL", "Javascript"],
+    "demoUrl": "https://example.com/synth",
+    "images": [
+      "/solar/solar.png",
+      "/solar/solar2.png"
+    ]
+  },
+  {
+    "id": 6,
+    "type": "Projects",
+    "title": "STUDENT FEEDBACK & SUGGESTION SYSTEM",
+    "year": "Dec. 2025 - Jan. 2026",
+    "category": "AI & Intelligent Systems",
+    "image": "/feedback/feedback.png",
+    "description": "AI-powered feedback and suggestion system for UMSKAL students with sentiment analysis.",
+    "stack": ["Full-Stack", "PHP", "MySQL", "Chart.js", "NLP"],
+    "demoUrl": "https://example.com/synth",
+    "images": [
+      "/feedback/feedback.png",
+      "/feedback/feedback2.png"
+    ]
+  },
+  {
+    "id": 7,
+    "type": "Projects",
+    "title": "BLACK HOLE RAY-TRACING SIMULATION",
+    "year": "Dec. 2025",
+    "category": "Creative Dev",
+    "image": "/blackhole/blackhole.png",
+    "description": "Visualises gravitational lensing, accretion disk, and spacetime curvature using ray-tracing techniques.",
+    "stack": ["C++", "OpenGL", "CMake"],
+    "demoUrl": "https://example.com/synth",
+    "images": [
+      "/blackhole/blackhole.png",
+      "/blackhole/blackhole2.png"
+    ]
+  },
+  {
+    "id": 8,
+    "type": "Projects",
+    "title": "PLUSHLY",
+    "year": "Sep. - Oct. 2025",
+    "category": "Commerce & Platforms",
+    "image": "/plushly/plushly.png",
+    "description": "Mobile-first e-commerce platform for plush toys. Allows customers to design custom plushies with Stripe purchases.",
+    "stack": ["React Native", "React", "Stripe", "Expo"],
+    "demoUrl": "https://example.com/synth",
+    "images": [
+      "/plushly/plushly.png",
+      "/plushly/plushly2.png"
+    ]
+  },
+  {
+    "id": 9,
+    "type": "Projects",
+    "title": "NOWHERE",
+    "year": "Aug. 2025",
+    "category": "Interactive",
+    "image": "/nowhere/nowhere.png",
+    "description": "Web-based game for players to guess real-world locations using Google Maps and Street View imagery.",
+    "stack": ["Redux", "Typescript", "Vite", "React", "Google Maps API"],
+    "demoUrl": "https://example.com/synth",
+    "images": [
+      "/nowhere/nowhere.png",
+      "/nowhere/nowhere2.png"
+    ]
+  },
+  {
+    "id": 10,
+    "type": "Projects",
+    "title": "FERRY TERMINAL MANAGEMENT",
+    "year": "Jul. 2025",
+    "category": "Systems & Algorithms",
+    "image": "/ferry/ferry.png",
+    "description": "Console-based ferry terminal system for managing ferry operations with data structure and algorithms.",
+    "stack": ["C++", "Data Structure", "Algorithms"],
+    "demoUrl": "https://example.com/synth",
+    "images": [
+      "/ferry/ferry.png",
+      "/ferry/ferry2.png"
+    ]
+  },
+  {
+    "id": 11,
+    "type": "Projects",
+    "title": "SNACK ATLAS",
+    "year": "Jun. - Jul. 2025",
+    "category": "Commerce & Platforms",
+    "image": "/snack/snack.png",
+    "description": "E-commerce snack shop for customers to browse and purchase snacks with order tracking.",
+    "stack": ["Laragon", "Figma", "HTML/CSS/JS", "MySQL", "PHP"],
+    "demoUrl": "https://example.com/synth",
+    "images": [
+      "/snack/snack.png",
+      "/snack/snack2.png"
+    ]
+  },
+  {
+    "id": 12,
+    "type": "Projects",
+    "title": "PROGRESS PACER",
+    "year": "Jun. - Jul. 2025",
+    "category": "Systems & Algorithms",
+    "image": "/progress/progress.png",
+    "description": "Group project - Academic management tool for students to track academic performance with personalised feedback.",
+    "stack": ["Laragon", "Figma", "HTML/CSS/JS", "MySQL", "PHP"],
+    "demoUrl": "https://example.com/synth",
+    "images": [
+      "/progress/progress.png",
+      "/progress/progress2.png"
+    ]
+  },
+  {
+    "id": 13,
+    "type": "Projects",
+    "title": "LIMBO",
+    "year": "Apr. 2025",
+    "category": "Creative Dev",
+    "image": "/limbo/limbo.png",
+    "description": "Personal website for showcsing interactive 3D environments with user-controlled character.",
+    "stack": ["HTML/CSS/JS", "Spline", "Git"],
+    "demoUrl": "https://example.com/synth",
+    "images": [
+      "/limbo/limbo.png",
+      "/limbo/limbo2.png"
+    ]
+  },
+  {
+    "id": 14,
+    "type": "Projects",
+    "title": "ONLINE GROCERY SYSTEM",
+    "year": "May 2024",
+    "category": "Systems & Algorithms",
+    "image": "/grocery/grocery.png",
+    "description": "GUI-based grocery system for purchasing goods with checkout and grocery receipt as order confimation.",
+    "stack": ["Java", "GUI", "Object Oriented Programming"],
+    "demoUrl": null,
+    "images": [
+      "/grocery/grocery.png",
+      "/grocery/grocery2.png",
+      "/grocery/grocery3.png",
+      "/grocery/grocery4.png"
+    ]
+  },
+  {
+    "id": 15,
+    "type": "Projects",
+    "title": "ESPRESSO EMPORIUM",
+    "year": "Apr. 2023",
+    "category": "Commerce & Platforms",
+    "image": "/espresso/espresso.png",
+    "description": "French language themed café website with an emphasis on frontend design and user-centricity.",
+    "stack": ["UI/UX", "Google Maps API", "Netlify", "HTML/CSS/JS"],
+    "demoUrl": "https://example.com/synth",
+    "images": [
+      "/espresso/espresso.png",
+      "/espresso/espresso2.png"
+    ]
+  },
+  {
+    "id": 16,
+    "type": "Projects",
+    "title": "FOOD ODYSSEY",
+    "year": "Jan. - Mar. 2025",
+    "category": "Interactive",
+    "image": "/odyssey/odyssey.png",
+    "description": "Foundation level FYP project showcasing various culinary delights globally, with 360° interactive environment view.",
+    "stack": ["360° View", "Netlify", "Google Maps API", "HTML/CSS/JS"],
+    "demoUrl": "https://example.com/synth",
+    "images": [
+      "/odyssey/odyssey.png",
+      "/odyssey/odyssey2.png"
+    ]
+  }
+]
