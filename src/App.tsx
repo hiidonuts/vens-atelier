@@ -106,10 +106,64 @@ const CustomCursor = () => {
   );
 };
 
-const NoiseOverlay = () => <div className="noise-overlay" />;
+const ConditionalNoiseOverlay = () => {
+  const [isGalleryInView, setIsGalleryInView] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  
+  useEffect(() => {
+    const handleScroll = () => {
+      const gallerySection = document.querySelector('.gallery-section');
+      const modalElement = document.querySelector('[class*="fixed inset-0 z-[100]"]');
+      
+      if (gallerySection) {
+        const rect = gallerySection.getBoundingClientRect();
+        setIsGalleryInView(rect.top < window.innerHeight && rect.bottom > 0);
+      }
+      
+      setIsModalOpen(!!modalElement);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('resize', handleScroll);
+    
+    // Initial check
+    handleScroll();
+    
+    // Also listen for modal changes
+    const observer = new MutationObserver(handleScroll);
+    observer.observe(document.body, { childList: true, subtree: true });
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
+      observer.disconnect();
+    };
+  }, []);
+
+  // Don't show noise overlay when in gallery or when modal is open
+  if (isGalleryInView || isModalOpen) {
+    return null;
+  }
+
+  return <div className="noise-overlay" />;
+};
 
 const VisitorCounter = () => {
   const [count, setCount] = useState<number | null>(null);
+  const [isNewVisitor, setIsNewVisitor] = useState(false);
+
+  // Generate or retrieve unique visitor ID
+  const getVisitorId = () => {
+    let visitorId = localStorage.getItem('visitor-id');
+    if (!visitorId) {
+      // Generate a more stable unique ID
+      const timestamp = Date.now();
+      const random = Math.random().toString(36).substr(2, 9);
+      visitorId = `visitor_${timestamp}_${random}`;
+      localStorage.setItem('visitor-id', visitorId);
+    }
+    return visitorId;
+  };
 
   const getOrdinal = (n: number) => {
     const s = ["th", "st", "nd", "rd"];
@@ -120,8 +174,16 @@ const VisitorCounter = () => {
   useEffect(() => {
     const fetchCount = async () => {
       try {
-        const response = await axios.get("/api/visitor-count");
+        const visitorId = getVisitorId();
+        console.log('Visitor ID:', visitorId); // Debug log
+        const response = await axios.get("/api/visitor-count", {
+          headers: {
+            'X-Visitor-ID': visitorId
+          }
+        });
+        console.log('Response:', response.data); // Debug log
         setCount(response.data.count);
+        setIsNewVisitor(response.data.isNewVisitor);
       } catch (error) {
         console.error("Failed to fetch visitor count");
       }
@@ -135,7 +197,7 @@ const VisitorCounter = () => {
         Atelier Entry #{count?.toString().padStart(4, '0') || '----'}
       </span>
       <p className="text-[10px] font-medium opacity-60 uppercase tracking-widest">
-        You are the {count ? getOrdinal(count) : '--'} visitor
+        {isNewVisitor ? 'Welcome! You are the first' : `You are the ${count ? getOrdinal(count) : '--'} visitor`}
       </p>
     </div>
   );
@@ -518,7 +580,7 @@ const TerminalHobbies = () => {
         response = "I'm currently a third year student pursuing B.IT. Business Computing at University Malaysia Sabah";
         break;
       case "skills":
-        response = "MERN Stack, Vite, TypeScript, GSAP, Framer Motion, UI/UX Design, SQL/NoSQL Databases";
+        response = "MERN Stack, Vite, TypeScript, GSAP, Framer Motion, UI/UX Design, SQL/NoSQL Databases, Git/Github";
         break;
       case "contact":
         response = "Gmail: venicevkx@gmail.com";
@@ -574,6 +636,8 @@ const TerminalHobbies = () => {
                 <div className="relative flex-1 flex items-center">
                   <input 
                     type="text" 
+                    id="terminal-input"
+                    name="terminal-input"
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     className="absolute inset-0 bg-transparent border-none outline-none text-[var(--text)] opacity-70 z-10 caret-transparent"
@@ -990,7 +1054,7 @@ export default function App() {
   return (
     <main className="relative">
       <CustomCursor />
-      <NoiseOverlay />
+      <ConditionalNoiseOverlay />
 
       {/* Project Detail Modal */}
       <ProjectModal 
@@ -1186,29 +1250,35 @@ export default function App() {
                 </div>
               </motion.div>
             </TiltCard>
-            
-            {/* Floating element removed as per sidebar request */}
           </div>
         </div>
       </section>
 
-      {/* Marquee Section */}
       <div className="bg-black text-white py-4 overflow-hidden border-y border-white/10 relative z-10">
         <motion.div 
           animate={{ x: [0, -1000] }}
           transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
           className="flex whitespace-nowrap gap-20 text-[10px] font-bold tracking-[0.5em] uppercase"
         >
-          <span>Underground Visuals</span>
-          <span>Club Identity</span>
-          <span>Nightlife Atelier</span>
-          <span>Ven's Studio</span>
-          <span>Berlin - Tokyo</span>
-          <span>Underground Visuals</span>
-          <span>Club Identity</span>
-          <span>Nightlife Atelier</span>
-          <span>Ven's Studio</span>
-          <span>Berlin - Tokyo</span>
+          <span>Visual Identity</span>
+          <span>✦</span>
+          <span>Creative Dev</span>
+          <span>✦</span>
+          <span>3D & WebGL</span>
+          <span>✦</span>
+          <span>Ven's Gallery</span>
+          <span>✦</span>
+          <span>Est. 2026</span>
+          <span>✦</span>
+          <span>Visual Identity</span>
+          <span>✦</span>
+          <span>Creative Dev</span>
+          <span>✦</span>
+          <span>3D & WebGL</span>
+          <span>✦</span>
+          <span>Ven's Gallery</span>
+          <span>✦</span>
+          <span>Est. 2026</span>
         </motion.div>
       </div>
 
@@ -1301,7 +1371,9 @@ export default function App() {
               <p className="text-xl font-light leading-relaxed opacity-60 max-w-lg">
                 This gallery is a record of decisions: design choices, technical solutions, creative experiments. 
                 <br />
-                Some are finished. Some are still evolving. All of them has a backstory when they were made.
+                Some are finished. Some are still evolving. 
+                <br />
+                All of them has a backstory when they were made.
               </p>
               <div className="mt-12">
                 <blockquote className="text-s font-serif italic opacity-50 border-l-2 border-current pl-6 mb-4">

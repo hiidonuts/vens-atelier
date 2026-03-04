@@ -56,12 +56,15 @@
     "year": "Jan. - Feb. 2026",
     "category": "AI & Intelligent Systems",
     "image": "/essence/essence.png",
-    "description": "AI assistant that provides contextual and factual information with citations. Responses are tailored based on user's custom preferences. Supports wide range of languages, e.g. Japanese, Korean, Dutch, etc.",
+    "description": "AI assistant that provides contextual and factual information with citations. Responses are tailored based on user's custom preferences and instructions. Supports wide range of languages, e.g. Japanese, Korean, French, etc. Currently under occasional polishing.",
     "stack": ["MERN Stack", "OpenRouter API", "Tailwind CSS"],
     "demoUrl": "https://example.com/synth",
     "images": [
       "/essence/essence.png",
-      "/essence/essence2.png"
+      "/essence/essence2.png",
+      "/essence/essence3.png",
+      "/essence/essence4.png",
+      "/essence/essence5.png"
     ]
   },
   {
