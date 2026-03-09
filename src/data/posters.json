@@ -76,10 +76,9 @@
     "image": "/solar/solar.png",
     "description": "Interactive 3D visualisation of the solar system, featuring real orbital mechanics based on Kepler's equations.",
     "stack": ["Three.js", "WebGL", "Javascript"],
-    "demoUrl": "https://example.com/synth",
+    "demoUrl": null,
     "images": [
-      "/solar/solar.png",
-      "/solar/solar2.png"
+      "/solar/solar.png"
     ]
   },
   {
