@@ -1,4 +1,6 @@
-import { get, set } from '@vercel/edge-config';
+import { createClient } from '@vercel/edge-config';
+
+const client = createClient();
 
 export default async function handler(req, res) {
   try {
@@ -22,7 +24,7 @@ export default async function handler(req, res) {
     console.log('Processing visitor:', visitorId);
 
     // Get current visitor data from Edge Config
-    let visitorData = await get('visitor-data');
+    let visitorData = await client.get('visitor-data');
     let uniqueVisitors = new Set();
     let visitorCount = 0;
 
@@ -45,7 +47,7 @@ export default async function handler(req, res) {
 
     // Save updated data back to Edge Config
     try {
-      await set('visitor-data', {
+      await client.set('visitor-data', {
         visitors: JSON.stringify([...uniqueVisitors]),
         count: visitorCount
       });
