@@ -5,15 +5,19 @@
     "title": "KAIRO",
     "year": "Mar. 2026 - Present",
     "category": "AI & Intelligent Systems",
-    "image": "/kairo/kairo2.png",
+    "image": "/kairo/kairo.png",
     "description": "AI-powered Personal Knowledge Management (PKM) desktop application to upload study materials, generate summaries, knowledge graphs, flashcards and quizzes. Built in AI assistant to guide users on their study materials. Adapts to user's topic mastery level and proficiency to provide targeted learning routes. Gamification and levelling system to encourage consistent learning.",
     "stack": ["Tauri", "PostgreSQL", "TypeScript", "FastAPI"],
     "demoUrl": null,
     "images": [
+      "/kairo/kairo.png",
       "/kairo/kairo2.png",
       "/kairo/kairo3.png",
       "/kairo/kairo4.png",
-      "/kairo/kairo.png"
+      "/kairo/kairo5.png",
+      "/kairo/kairo6.png",
+      "/kairo/kairo7.png",
+      "/kairo/kairo8.png"
     ]
   },
   {

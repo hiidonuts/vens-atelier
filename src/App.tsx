@@ -29,14 +29,12 @@ const CustomCursor = () => {
     const handleMouseOver = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
       
-      // Check if we're in a modal or its scrollable content
       const isInModal = target.closest('.modal-container') || 
                        target.closest('.modal-content') ||
                        target.closest('.modal-scrollable') ||
                        target.closest('.flex-1.overflow-y-auto') ||
                        target.closest('.overflow-y-scroll');
       
-      // Force custom cursor for all modal-related elements
       if (isInModal) {
         setCursorType("default");
         return;
@@ -53,7 +51,6 @@ const CustomCursor = () => {
       }
     };
 
-    // Force cursor hidden on scrollbar elements
     const handleScrollbarInteraction = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
       if (target.tagName === 'HTML' || target.tagName === 'BODY') {
@@ -211,7 +208,7 @@ const VisitorCounter = () => {
         Atelier Entry #{count?.toString().padStart(4, '0') || '----'}
       </span>
       <p className="text-[10px] font-medium opacity-60 uppercase tracking-widest">
-        {count === 1 ? 'Welcome! You are the first' : `You are the ${count ? getOrdinal(count) : '--'} visitor`}
+        {count === 1 ? 'Welcome! You are the first' : `You are the ${count ? getOrdinal(count) : '--'} visitor.`}
       </p>
     </div>
   );
