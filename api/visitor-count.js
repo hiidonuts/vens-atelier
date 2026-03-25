@@ -1,40 +1,4 @@
-import Database from "better-sqlite3";
-import { existsSync, mkdirSync } from "fs";
-import { join } from "path";
-
-const dbPath = join(process.cwd(), 'archive.db');
-let db;
-
-try {
-  db = new Database(dbPath);
-  db.exec(`
-    CREATE TABLE IF NOT EXISTS visitor_count (
-      id INTEGER PRIMARY KEY,
-      count INTEGER DEFAULT 0
-    );
-    INSERT OR IGNORE INTO visitor_count (id, count) VALUES (1, 0);
-    CREATE TABLE IF NOT EXISTS unique_visitors (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      visitor_id TEXT UNIQUE,
-      visited_at DATETIME DEFAULT CURRENT_TIMESTAMP
-    );
-  `);
-} catch (error) {
-  console.error('Database initialization error:', error);
-  db = new Database(':memory:');
-  db.exec(`
-    CREATE TABLE IF NOT EXISTS visitor_count (
-      id INTEGER PRIMARY KEY,
-      count INTEGER DEFAULT 0
-    );
-    INSERT OR IGNORE INTO visitor_count (id, count) VALUES (1, 0);
-    CREATE TABLE IF NOT EXISTS unique_visitors (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      visitor_id TEXT UNIQUE,
-      visited_at DATETIME DEFAULT CURRENT_TIMESTAMP
-    );
-  `);
-}
+import { kv } from '@vercel/kv';
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -50,19 +14,18 @@ export default async function handler(req, res) {
   }
 
   try {
-    const row = db.prepare("SELECT count FROM visitor_count WHERE id = 1").get();
-    const count = row ? row.count : 0;
     const visitorId = req.headers['x-visitor-id'] || req.ip;
-    const existingVisitor = db.prepare("SELECT * FROM unique_visitors WHERE visitor_id = ?").get(visitorId);
-    let newCount = count;
-    
-    if (!existingVisitor) {
-      newCount = count + 1;
-      db.prepare("UPDATE visitor_count SET count = ? WHERE id = 1").run(newCount);
-      db.prepare("INSERT INTO unique_visitors (visitor_id, visited_at) VALUES (?, datetime('now'))").run(visitorId);
+    const isNew = !(await kv.sismember('visitors', visitorId));
+
+    if (isNew) {
+      await kv.sadd('visitors', visitorId);
+      const currentCount = parseInt(await kv.get('count') || '0');
+      await kv.set('count', (currentCount + 1).toString());
     }
-    
-    res.json({ count: newCount, isNewVisitor: !existingVisitor });
+
+    const count = parseInt(await kv.get('count') || '0');
+
+    res.json({ count, isNewVisitor: isNew });
   } catch (error) {
     console.error('Visitor count error:', error);
     res.status(500).json({ error: 'Internal server error' });
