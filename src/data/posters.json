@@ -2,36 +2,53 @@
   {
     "id": 1,
     "type": "Projects",
-    "title": "VEN'S ATELIER",
-    "year": "Feb. - Mar. 2026",
-    "category": "Interactive",
-    "image": "/atelier/atelier.png",
+    "title": "KAIRO",
+    "year": "Mar. 2026 - Present",
+    "category": "AI & Intelligent Systems",
+    "image": "/kairo/kairo2.png",
+    "description": "AI-powered Personal Knowledge Management (PKM) desktop application to upload study materials, generate summaries, knowledge graphs, flashcards and quizzes. Built in AI assistant to guide users on their study materials. Adapts to user's topic mastery level and proficiency to provide targeted learning routes. Gamification and levelling system to encourage consistent learning.",
+    "stack": ["Tauri", "PostgreSQL", "TypeScript", "FastAPI"],
+    "demoUrl": null,
     "images": [
-      "/atelier/atelier.png",
-      "/atelier/atelier2.png",
-      "/atelier/atelier3.png"
-    ],
-    "description": "Personal portfolio website to showcase my skills and projects. p.s. You're accessing it right now!",
-    "stack": ["GSAP", "Framer Motion", "React", "Node.js"],
-    "demoUrl": null
+      "/kairo/kairo2.png",
+      "/kairo/kairo3.png",
+      "/kairo/kairo4.png",
+      "/kairo/kairo.png"
+    ]
   },
   {
     "id": 2,
     "type": "Projects",
-    "title": "KAIRO",
-    "year": "Feb. 2026 - Present",
+    "title": "LORE",
+    "year": "Mar. 2026",
     "category": "AI & Intelligent Systems",
-    "image": "/kairo/kairo.png",
+    "image": "/lore/lore.png",
+    "description": "Desktop writing app that allows avid writers to develop story plots, organise chapters, scenes and versions, build character profiles, and generate story outlines. Read mode for a clean and immersive reading experience.",
+    "stack": ["Drizzle ORM", "SQLite", "Tauri", "TipTap", "Zustand"],
+    "demoUrl": null,
     "images": [
-      "/kairo/kairo.png",
-      "/kairo/kairo2.png"
-    ],
-    "description": "AI-powered Personal Knowledge Management (PKM) desktop application to upload study materials, generate summaries, knowledge graphs, flashcards and quizzes. Built in AI assistant to guide users on their study materials. Adapts to user's topic mastery level and proficiency to provide targeted learning routes. Multi-language support.",
-    "stack": ["Tauri", "PostgreSQL", "TypeScript", "FastAPI"],
-    "demoUrl": null
+      "/lore/lore.png",
+      "/lore/lore2.png"
+    ]
   },
   {
     "id": 3,
+    "type": "Projects",
+    "title": "VEN'S ATELIER",
+    "year": "Feb. - Mar. 2026",
+    "category": "Interactive",
+    "image": "/atelier/atelier.png",
+    "description": "Personal portfolio website to showcase my skills and projects. p.s. You're accessing it right now!",
+    "stack": ["GSAP", "Framer Motion", "React", "Node.js"],
+    "demoUrl": null,
+    "images": [
+      "/atelier/atelier.png",
+      "/atelier/atelier2.png",
+      "/atelier/atelier3.png"
+    ]
+  },
+  {
+    "id": 4,
     "type": "Projects",
     "title": "PRESSED.",
     "year": "Feb. - Mar. 2026",
@@ -50,15 +67,15 @@
     ]
   },
   {
-    "id": 4,
+    "id": 5,
     "type": "Projects",
     "title": "ESSENCE",
     "year": "Jan. - Feb. 2026",
     "category": "AI & Intelligent Systems",
     "image": "/essence/essence.png",
-    "description": "AI assistant that provides contextual and factual information with citations. Responses are tailored based on user's custom preferences and instructions. Supports wide range of languages, e.g. Japanese, Korean, French, etc. Currently under occasional polishing.",
+    "description": "AI assistant that provides contextual and factual information with citations. Responses are tailored based on user's custom preferences and instructions, enables chat memories for persistent conversations. Supports wide range of languages, e.g. Japanese, Korean, French, etc. Currently under occasional polishing.",
     "stack": ["MERN Stack", "OpenRouter API", "Tailwind CSS"],
-    "demoUrl": "https://example.com/synth",
+    "demoUrl": null,
     "images": [
       "/essence/essence.png",
       "/essence/essence2.png",
@@ -68,13 +85,13 @@
     ]
   },
   {
-    "id": 5,
+    "id": 6,
     "type": "Projects",
     "title": "SOLAR SYSTEM 3D",
     "year": "Feb. 2026",
     "category": "Creative Dev",
     "image": "/solar/solar.png",
-    "description": "Interactive 3D visualisation of the solar system, featuring real orbital mechanics based on Kepler's equations.",
+    "description": "Interactive 3D visualisation of the solar system, featuring real orbital mechanics based on Kepler's equations, with detailed explanations of each planet. Utlised on rendering, camera controls, raycasting, and dynamic lighting.",
     "stack": ["Three.js", "WebGL", "Javascript"],
     "demoUrl": "https://github.com/hiidonuts/solar-system",
     "images": [
@@ -82,7 +99,7 @@
     ]
   },
   {
-    "id": 6,
+    "id": 7,
     "type": "Projects",
     "title": "STUDENT FEEDBACK & SUGGESTION SYSTEM",
     "year": "Dec. 2025 - Jan. 2026",
@@ -90,40 +107,24 @@
     "image": "/feedback/feedback.png",
     "description": "AI-powered feedback and suggestion system for UMSKAL students with sentiment analysis.",
     "stack": ["Full-Stack", "PHP", "MySQL", "Chart.js", "NLP"],
-    "demoUrl": "https://example.com/synth",
+    "demoUrl": null,
     "images": [
       "/feedback/feedback.png",
       "/feedback/feedback2.png"
     ]
   },
   {
-    "id": 7,
+    "id": 8,
     "type": "Projects",
     "title": "BLACK HOLE RAY-TRACING SIMULATION",
     "year": "Dec. 2025",
     "category": "Creative Dev",
     "image": "/blackhole/blackhole.png",
-    "description": "Visualises gravitational lensing, accretion disk, and spacetime curvature using ray-tracing techniques.",
+    "description": "Visualises gravitational lensing, accretion disk, and spacetime curvature using ray-tracing techniques. GPU-accelerated computations with shaders to solve geodesic equations and render 2D and 3D view of light paths.",
     "stack": ["C++", "OpenGL", "CMake"],
-    "demoUrl": "https://example.com/synth",
+    "demoUrl": null,
     "images": [
-      "/blackhole/blackhole.png",
-      "/blackhole/blackhole2.png"
-    ]
-  },
-  {
-    "id": 8,
-    "type": "Projects",
-    "title": "PLUSHLY",
-    "year": "Sep. - Oct. 2025",
-    "category": "Commerce & Platforms",
-    "image": "/plushly/plushly.png",
-    "description": "Mobile-first e-commerce platform for plush toys. Allows customers to design custom plushies with Stripe purchases.",
-    "stack": ["React Native", "React", "Stripe", "Expo"],
-    "demoUrl": "https://example.com/synth",
-    "images": [
-      "/plushly/plushly.png",
-      "/plushly/plushly2.png"
+      "/blackhole/blackhole.png"
     ]
   },
   {
@@ -135,7 +136,7 @@
     "image": "/nowhere/nowhere.png",
     "description": "Web-based game for players to guess real-world locations using Google Maps and Street View imagery.",
     "stack": ["Redux", "Typescript", "Vite", "React", "Google Maps API"],
-    "demoUrl": "https://example.com/synth",
+    "demoUrl": null,
     "images": [
       "/nowhere/nowhere.png",
       "/nowhere/nowhere2.png"
@@ -148,12 +149,16 @@
     "year": "Jul. 2025",
     "category": "Systems & Algorithms",
     "image": "/ferry/ferry.png",
-    "description": "Console-based ferry terminal system for managing ferry operations with data structure and algorithms.",
+    "description": "Console-based ferry terminal system for managing ferry operations (passenger and vehicle management, ticketing, scheduling) with data structure and algorithms.",
     "stack": ["C++", "Data Structure", "Algorithms"],
-    "demoUrl": "https://example.com/synth",
+    "demoUrl": null,
     "images": [
       "/ferry/ferry.png",
-      "/ferry/ferry2.png"
+      "/ferry/ferry2.png",
+      "/ferry/ferry3.png",
+      "/ferry/ferry4.png",
+      "/ferry/ferry5.png",
+      "/ferry/ferry6.png"
     ]
   },
   {
@@ -163,9 +168,9 @@
     "year": "Jun. - Jul. 2025",
     "category": "Commerce & Platforms",
     "image": "/snack/snack.png",
-    "description": "E-commerce snack shop for customers to browse and purchase snacks with order tracking.",
+    "description": "E-commerce snack shop for customers to browse and purchase snacks with order tracking. Admin panel for managing products and orders.",
     "stack": ["Laragon", "Figma", "HTML/CSS/JS", "MySQL", "PHP"],
-    "demoUrl": "https://example.com/synth",
+    "demoUrl": null,
     "images": [
       "/snack/snack.png",
       "/snack/snack2.png"
@@ -178,9 +183,9 @@
     "year": "Jun. - Jul. 2025",
     "category": "Systems & Algorithms",
     "image": "/progress/progress.png",
-    "description": "Group project - Academic management tool for students to track academic performance with personalised feedback.",
+    "description": "Group project | Academic management tool for students to track academic performance with personalised feedback, with task management, grade calculation, and progress visualization.",
     "stack": ["Laragon", "Figma", "HTML/CSS/JS", "MySQL", "PHP"],
-    "demoUrl": "https://example.com/synth",
+    "demoUrl": "https://github.com/hiidonuts/ProgressPacer",
     "images": [
       "/progress/progress.png",
       "/progress/progress2.png"
@@ -193,12 +198,13 @@
     "year": "Apr. 2025",
     "category": "Creative Dev",
     "image": "/limbo/limbo.png",
-    "description": "Personal website for showcsing interactive 3D environments with user-controlled character.",
+    "description": "Personal website for showcasing interactive 3D environments with user-controlled character movements.",
     "stack": ["HTML/CSS/JS", "Spline", "Git"],
-    "demoUrl": "https://example.com/synth",
+    "demoUrl": "https://hiidonuts.github.io/limbo/",
     "images": [
       "/limbo/limbo.png",
-      "/limbo/limbo2.png"
+      "/limbo/limbo2.png",
+      "/limbo/limbo3.png"
     ]
   },
   {
@@ -208,7 +214,7 @@
     "year": "May 2024",
     "category": "Systems & Algorithms",
     "image": "/grocery/grocery.png",
-    "description": "GUI-based grocery system for purchasing goods with checkout and grocery receipt as order confimation.",
+    "description": "GUI-based grocery system for purchasing goods with checkout functionalities and grocery receipt as order confirmation.",
     "stack": ["Java", "GUI", "Object Oriented Programming"],
     "demoUrl": null,
     "images": [
@@ -227,10 +233,12 @@
     "image": "/espresso/espresso.png",
     "description": "French language themed café website with an emphasis on frontend design and user-centricity.",
     "stack": ["UI/UX", "Google Maps API", "Netlify", "HTML/CSS/JS"],
-    "demoUrl": "https://example.com/synth",
+    "demoUrl": "https://espressoemporium.netlify.app/",
     "images": [
       "/espresso/espresso.png",
-      "/espresso/espresso2.png"
+      "/espresso/espresso2.png",
+      "/espresso/espresso3.png",
+      "/espresso/espresso4.png"
     ]
   },
   {
@@ -240,12 +248,15 @@
     "year": "Jan. - Mar. 2025",
     "category": "Interactive",
     "image": "/odyssey/odyssey.png",
-    "description": "Foundation level FYP project showcasing various culinary delights globally, with 360° interactive environment view.",
+    "description": "Foundation level FYP project showcasing various culinary delights globally (Asia, Europe, Africa, Middle East, North & South America), with 360° interactive panorama environment view.",
     "stack": ["360° View", "Netlify", "Google Maps API", "HTML/CSS/JS"],
     "demoUrl": "https://example.com/synth",
     "images": [
       "/odyssey/odyssey.png",
-      "/odyssey/odyssey2.png"
+      "/odyssey/odyssey2.png",
+      "/odyssey/odyssey3.png",
+      "/odyssey/odyssey4.png",
+      "/odyssey/odyssey5.png"
     ]
   }
 ]

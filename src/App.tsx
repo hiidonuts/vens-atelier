@@ -443,7 +443,7 @@ const LocalTime = () => {
 };
 
 const LastUpdated = () => {
-  const timestamp = "02 MAR 2026, 06:43:46";
+  const timestamp = "25 MAR 2026, 14:42 (GMT +8";
 
   return (
     <span className="text-[10px] font-mono opacity-30 uppercase tracking-[0.2em]">
