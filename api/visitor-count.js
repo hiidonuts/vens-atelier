@@ -27,8 +27,12 @@ export default async function handler(req, res) {
     let visitorCount = 0;
 
     if (visitorData) {
-      uniqueVisitors = new Set(JSON.parse(visitorData.visitors || '[]'));
-      visitorCount = visitorData.count || 0;
+      try {
+        uniqueVisitors = new Set(JSON.parse(visitorData.visitors || '[]'));
+        visitorCount = visitorData.count || 0;
+      } catch (parseError) {
+        console.log('Parse error, starting fresh:', parseError);
+      }
     }
 
     const isNew = !uniqueVisitors.has(visitorId);
@@ -40,10 +44,15 @@ export default async function handler(req, res) {
     }
 
     // Save updated data back to Edge Config
-    await set('visitor-data', {
-      visitors: JSON.stringify([...uniqueVisitors]),
-      count: visitorCount
-    });
+    try {
+      await set('visitor-data', {
+        visitors: JSON.stringify([...uniqueVisitors]),
+        count: visitorCount
+      });
+      console.log('Saved to Edge Config');
+    } catch (saveError) {
+      console.log('Save failed, using in-memory only:', saveError);
+    }
 
     res.status(200).json({
       count: visitorCount,
