@@ -36,7 +36,6 @@
   }
 }
 
-/* Custom Cursor Styles */
 @media (pointer: fine) {
   * {
     cursor: none !important;
@@ -77,7 +76,6 @@
   color: var(--text);
 }
 
-/* Noise Overlay */
 .noise-overlay {
   position: fixed;
   top: 0;
@@ -90,7 +88,6 @@
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
 }
 
-/* View Transitions for Theme Toggle */
 ::view-transition-old(root),
 ::view-transition-new(root) {
   animation: none;
@@ -111,4 +108,85 @@
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+.scroll-smooth {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+.modal-image-container {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Ensure modal content can scroll properly */
+.flex-1.overflow-y-auto {
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+}
+
+/* Ensure custom cursor works in modal scrollable areas */
+@media (pointer: fine) {
+  .modal-container,
+  .modal-content {
+    cursor: none !important;
+  }
+  
+  .modal-container *,
+  .modal-content * {
+    cursor: none !important;
+  }
+  
+  .modal-container input,
+  .modal-container textarea,
+  .modal-content input,
+  .modal-content textarea,
+  .flex-1.overflow-y-auto input,
+  .flex-1.overflow-y-auto textarea,
+  .overflow-y-scroll input,
+  .overflow-y-scroll textarea {
+    cursor: text !important;
+  }
+  
+  /* Ensure scrollable areas can receive wheel events */
+  .flex-1.overflow-y-auto,
+  .overflow-y-scroll,
+  .modal-scrollable {
+    pointer-events: auto !important;
+  }
+}
+
+/* Custom scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: currentColor;
+  border-radius: 3px;
+  opacity: 0.2;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  opacity: 0.4;
+}
+
+/* Firefox scrollbar styling */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: currentColor transparent;
+}
+
+/* Enhanced scrollbar for modal content */
+.modal-scrollable::-webkit-scrollbar-thumb {
+  opacity: 0.15;
+}
+
+.modal-scrollable::-webkit-scrollbar-thumb:hover {
+  opacity: 0.3;
 }

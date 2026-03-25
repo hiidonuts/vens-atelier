@@ -250,7 +250,7 @@
     "image": "/odyssey/odyssey.png",
     "description": "Foundation level FYP project showcasing various culinary delights globally (Asia, Europe, Africa, Middle East, North & South America), with 360° interactive panorama environment view.",
     "stack": ["360° View", "Netlify", "Google Maps API", "HTML/CSS/JS"],
-    "demoUrl": "https://example.com/synth",
+    "demoUrl": null,
     "images": [
       "/odyssey/odyssey.png",
       "/odyssey/odyssey2.png",

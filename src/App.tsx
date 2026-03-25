@@ -1,8 +1,3 @@
-/**
- * @license
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import { motion, useScroll, useTransform, AnimatePresence, useMotionValue, useSpring, LayoutGroup, useInView } from "motion/react";
 import { ArrowRight, Menu, Plus, X, ArrowDown, ArrowUp, Github, Instagram, Linkedin, Sun, Moon, Terminal, ExternalLink, ChevronLeft, ChevronRight } from "lucide-react";
 import React, { useRef, useState, useMemo, useEffect, useLayoutEffect } from "react";
@@ -22,7 +17,6 @@ const CustomCursor = () => {
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
-  // Faster springs for the main cursor to feel responsive
   const cursorX = useSpring(mouseX, { damping: 30, stiffness: 800, mass: 0.2 });
   const cursorY = useSpring(mouseY, { damping: 30, stiffness: 800, mass: 0.2 });
 
@@ -34,12 +28,20 @@ const CustomCursor = () => {
 
     const handleMouseOver = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
+      const isInModal = target.closest('.modal-container') || 
+                       target.closest('.modal-content') ||
+                       target.closest('.modal-scrollable') ||
+                       target.closest('.flex-1.overflow-y-auto') ||
+                       target.closest('.overflow-y-scroll');
+      
       if (target.closest(".gallery-card") || target.closest("button") || target.closest("a")) {
         if (target.closest(".gallery-card")) {
           setCursorType("view");
         } else {
           setCursorType("default");
         }
+      } else if (isInModal) {
+        setCursorType("default");
       } else {
         setCursorType("default");
       }
@@ -125,11 +127,8 @@ const ConditionalNoiseOverlay = () => {
 
     window.addEventListener('scroll', handleScroll);
     window.addEventListener('resize', handleScroll);
-    
-    // Initial check
     handleScroll();
-    
-    // Also listen for modal changes
+  
     const observer = new MutationObserver(handleScroll);
     observer.observe(document.body, { childList: true, subtree: true });
 
@@ -140,7 +139,6 @@ const ConditionalNoiseOverlay = () => {
     };
   }, []);
 
-  // Don't show noise overlay when in gallery or when modal is open
   if (isGalleryInView || isModalOpen) {
     return null;
   }
@@ -152,11 +150,9 @@ const VisitorCounter = () => {
   const [count, setCount] = useState<number | null>(null);
   const [isNewVisitor, setIsNewVisitor] = useState(false);
 
-  // Generate or retrieve unique visitor ID
   const getVisitorId = () => {
     let visitorId = localStorage.getItem('visitor-id');
     if (!visitorId) {
-      // Generate a more stable unique ID
       const timestamp = Date.now();
       const random = Math.random().toString(36).substr(2, 9);
       visitorId = `visitor_${timestamp}_${random}`;
@@ -175,13 +171,11 @@ const VisitorCounter = () => {
     const fetchCount = async () => {
       try {
         const visitorId = getVisitorId();
-        console.log('Visitor ID:', visitorId); // Debug log
         const response = await axios.get("/api/visitor-count", {
           headers: {
             'X-Visitor-ID': visitorId
           }
         });
-        console.log('Response:', response.data); // Debug log
         setCount(response.data.count);
         setIsNewVisitor(response.data.isNewVisitor);
       } catch (error) {
@@ -284,7 +278,6 @@ const WorkCard: React.FC<PosterCardProps> = ({ poster, index, onOpenDetail }) =>
       }}
       className="gallery-card group relative flex-shrink-0 w-[75vw] md:w-[450px] lg:w-[500px] aspect-[3/4] max-h-[55vh] md:max-h-[60vh] overflow-hidden bg-[#111] cursor-pointer z-10 shadow-2xl flex flex-col"
     >
-      {/* Image Container */}
       <div className={`relative overflow-hidden ${isProject ? 'h-[60%]' : 'h-full'}`}>
         <div className="absolute top-4 left-4 z-10 flex flex-col gap-1">
           <span className="text-[9px] font-bold tracking-widest uppercase bg-white text-black px-2 py-0.5 w-fit">
@@ -443,7 +436,7 @@ const LocalTime = () => {
 };
 
 const LastUpdated = () => {
-  const timestamp = "25 MAR 2026, 14:42 (GMT +8";
+  const timestamp = "25 MAR 2026, 15:56 (GMT +8)";
 
   return (
     <span className="text-[10px] font-mono opacity-30 uppercase tracking-[0.2em]">
@@ -657,7 +650,7 @@ const TerminalHobbies = () => {
       <div className="h-[70px] mt-4 px-1 flex flex-col gap-0.5">
         {isDone && (
           <>
-            <div className="text-[10px] text-orange-500/60 uppercase tracking-[0.2em] font-mono">Available Commands</div>
+            <div className="text-[10px] text-red-500/60 uppercase tracking-[0.2em] font-mono">Available Commands</div>
             <div className="text-[10px] opacity-50 font-mono tracking-widest">help, about, skills, contact, secret, clear</div>
           </>
         )}
@@ -704,7 +697,7 @@ const ProjectModal = ({ project, onClose }: { project: WorkItem | null, onClose:
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-12 bg-black/90 backdrop-blur-xl"
+        className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-12 bg-black/90 backdrop-blur-xl modal-container"
         onClick={onClose}
       >
         <motion.div 
@@ -712,7 +705,7 @@ const ProjectModal = ({ project, onClose }: { project: WorkItem | null, onClose:
           animate={{ scale: 1, y: 0, opacity: 1 }}
           exit={{ scale: 0.9, y: 20, opacity: 0 }}
           transition={{ type: "spring", damping: 25, stiffness: 300 }}
-          className="bg-[var(--bg)] text-[var(--text)] border border-current border-opacity-10 w-full max-w-5xl h-full max-h-[90vh] overflow-hidden flex flex-col relative shadow-2xl transition-colors duration-500"
+          className="bg-[var(--bg)] text-[var(--text)] border border-current border-opacity-10 w-full max-w-5xl h-full max-h-[90vh] flex flex-col relative shadow-2xl transition-colors duration-500 modal-content"
           onClick={e => e.stopPropagation()}
         >
           <button 
@@ -722,7 +715,6 @@ const ProjectModal = ({ project, onClose }: { project: WorkItem | null, onClose:
             <X size={20} />
           </button>
 
-          {/* Image Section - Now on top */}
           <div 
             className="relative w-full h-[25vh] md:h-[30vh] overflow-hidden bg-black group/image cursor-zoom-in modal-image-container"
             onClick={() => setIsViewingImage(true)}
@@ -764,7 +756,6 @@ const ProjectModal = ({ project, onClose }: { project: WorkItem | null, onClose:
             )}
           </div>
 
-          {/* Full Screen Image View */}
           <AnimatePresence>
             {isViewingImage && (
               <motion.div
@@ -841,13 +832,16 @@ const ProjectModal = ({ project, onClose }: { project: WorkItem | null, onClose:
             )}
           </AnimatePresence>
 
-          {/* Details Section - Now below */}
-          <div className="flex-1 p-8 md:p-12 overflow-y-auto no-scrollbar flex flex-col scroll-smooth">
+          <div 
+            className="flex-1 p-8 md:p-12 overflow-y-scroll flex flex-col modal-scrollable" 
+            style={{ height: '60vh' }}
+            onWheel={(e) => e.stopPropagation()}
+          >
             <div className="mb-12">
               <span className="text-[10px] font-bold tracking-[0.4em] uppercase opacity-40 mb-4 block">
                 {project.year} / {project.category}
               </span>
-              <h2 className="text-4xl md:text-6xl font-display font-bold tracking-tighter leading-none mb-8">
+              <h2 className="text-4xl md:text-5xl font-display font-bold tracking-tighter leading-none mb-8">
                 {project.title}
               </h2>
               <p className="text-lg font-light leading-relaxed opacity-60 max-w-3xl">
@@ -866,9 +860,9 @@ const ProjectModal = ({ project, onClose }: { project: WorkItem | null, onClose:
               </div>
             </div>
 
-            <div className="mt-auto pt-12 border-t border-current border-opacity-10 flex flex-col sm:flex-row gap-6">
+            <div className="pt-12 border-t border-current border-opacity-10 flex flex-col sm:flex-row gap-6">
               {project.demoUrl && (
-                <a href={project.demoUrl} target="_blank" rel="noopener noreferrer" className="flex-1 bg-[var(--text)] text-[var(--bg)] text-center py-4 font-bold text-[11px] tracking-widest uppercase hover:bg-emerald-500 hover:text-white transition-colors">
+                <a href={project.demoUrl} target="_blank" rel="noopener noreferrer" className="flex-1 bg-[var(--text)] text-[var(--bg)] text-center py-4 font-bold text-[11px] tracking-widest uppercase hover:bg-[var(--bg)] hover:text-[var(--text)] border border-current border-opacity-10 transition-colors">
                   Launch Project
                 </a>
               )}
@@ -909,14 +903,12 @@ export default function App() {
       Math.max(y, window.innerHeight - y)
     );
 
-    // @ts-ignore - View Transition API is still experimental in some TS versions
     if (!document.startViewTransition) {
       setIsDark(!isDark);
       document.documentElement.classList.toggle("dark", !isDark);
       return;
     }
 
-    // @ts-ignore
     const transition = document.startViewTransition(() => {
       const nextTheme = !isDark;
       setIsDark(nextTheme);
@@ -955,7 +947,6 @@ export default function App() {
   }, [selectedCategory]);
 
   useLayoutEffect(() => {
-    // Initial load animation
     gsap.fromTo(".gallery-card", 
       { y: 60, opacity: 0 },
       { y: 0, opacity: 1, duration: 1, stagger: 0.1, ease: "power3.out", delay: 0.5 }
@@ -963,14 +954,12 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    // Initialize Lenis
     const lenis = new Lenis({
       duration: 1.4,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
     });
     lenisRef.current = lenis;
 
-    // Sync ScrollTrigger with Lenis
     lenis.on('scroll', ScrollTrigger.update);
 
     const update = (time: number) => {
@@ -995,8 +984,7 @@ export default function App() {
         delay: 0.5
       }
     );
-
-    // Hide Sidebar Branding in Gallery Section
+  
     ScrollTrigger.create({
       trigger: ".gallery-section",
       start: "top 50%",
@@ -1044,7 +1032,6 @@ export default function App() {
 
   const handleCategoryChange = (cat: string) => {
     setSelectedCategory(cat);
-    // Reset scroll to start of gallery
     if (containerRef.current) {
       const top = containerRef.current.offsetTop;
       window.scrollTo({ top, behavior: 'smooth' });
@@ -1056,13 +1043,11 @@ export default function App() {
       <CustomCursor />
       <ConditionalNoiseOverlay />
 
-      {/* Project Detail Modal */}
       <ProjectModal 
         project={selectedProject} 
         onClose={() => setSelectedProject(null)} 
       />
 
-      {/* Parallax Background Element */}
       <motion.div 
         style={{ y: parallaxY }}
         className="fixed top-0 left-0 w-full h-full pointer-events-none z-0 opacity-[0.03]"
@@ -1071,7 +1056,6 @@ export default function App() {
         <div className="absolute top-[60%] right-[10%] w-[30vw] h-[30vw] border-[1px] border-current rotate-45" />
       </motion.div>
 
-      {/* Sidebar Branding */}
       <div className="sidebar-branding fixed right-2 top-1/2 -translate-y-1/2 z-50 hidden lg:flex flex-col items-center gap-8">
         <div className="w-[1px] h-24 bg-current opacity-10" />
         <span className="text-[9px] font-bold tracking-[0.5em] uppercase [writing-mode:vertical-rl] opacity-30 text-center">
@@ -1282,7 +1266,6 @@ export default function App() {
         </motion.div>
       </div>
 
-      {/* Horizontal Scroll Section */}
       <section className="gallery-section relative h-[400vh] bg-black text-white z-10" ref={containerRef}>
         <div className="sticky top-0 h-screen flex flex-col justify-center overflow-hidden pt-32 pb-32">
           <div className="px-6 mb-8 md:mb-12 flex flex-col md:flex-row justify-between items-start md:items-end max-w-7xl mx-auto w-full gap-6 md:gap-8">
@@ -1294,9 +1277,6 @@ export default function App() {
                 GALLERY.
               </h2>
               
-              {/* Top Level Filters removed as per request */}
-
-              {/* Second Level Filters (Now Primary) */}
               {categories.length > 0 && (
                 <div className="flex flex-wrap gap-3">
                   {categories.map((cat) => (
@@ -1338,7 +1318,6 @@ export default function App() {
               ))}
             </AnimatePresence>
             
-            {/* End Card */}
             <motion.div 
               data-flip-id="end-card"
               className="gallery-card flex-shrink-0 w-[75vw] md:w-[450px] lg:w-[500px] aspect-[3/4] max-h-[55vh] md:max-h-[60vh] flex flex-col items-center justify-center border border-white/10 group cursor-pointer"
@@ -1357,7 +1336,6 @@ export default function App() {
         </div>
       </section>
 
-      {/* Info Section */}
       <section ref={infoRef} className="py-32 px-6 relative z-10">
         <div className="max-w-7xl mx-auto flex flex-col gap-32">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-20 items-start">
@@ -1421,7 +1399,6 @@ export default function App() {
         </div>
       </section>
 
-      {/* Footer */}
       <footer className="py-12 px-6 border-t border-current border-opacity-5 flex flex-col md:flex-row justify-between items-center gap-8 relative z-10">
         <span className="text-[10px] font-bold tracking-[0.4em] uppercase opacity-30">
           © 2026 VEN'S ATELIER
