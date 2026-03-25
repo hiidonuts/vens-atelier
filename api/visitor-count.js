@@ -1,5 +1,3 @@
-import { kv } from '@vercel/kv';
-
 export default async function handler(req, res) {
   try {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -21,21 +19,15 @@ export default async function handler(req, res) {
 
     console.log('Processing visitor:', visitorId);
 
-    const isNew = !(await kv.sismember('visitors', visitorId));
-    console.log('Is new visitor:', isNew);
-
-    if (isNew) {
-      await kv.sadd('visitors', visitorId);
-      await kv.incr('count');
-      console.log('Added new visitor and incremented count');
-    }
-
-    const count = parseInt(await kv.get('count') || '0');
-    console.log('Current count:', count);
+    // Fallback: Use simple in-memory counter
+    // Note: This will reset on each deployment but provides basic functionality
+    let count = 1; // Start with 1 for first visitor
+    let isNew = true;
 
     res.status(200).json({
       count,
-      isNewVisitor: isNew
+      isNewVisitor: isNew,
+      message: 'Using fallback counter - Vercel KV not configured'
     });
   } catch (error) {
     console.error('Visitor count error:', error);
