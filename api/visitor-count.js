@@ -1,6 +1,6 @@
 import { createClient } from '@vercel/edge-config';
 
-const client = createClient();
+const client = createClient(process.env.EDGE_CONFIG);
 
 export default async function handler(req, res) {
   try {
