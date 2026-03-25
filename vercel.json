@@ -6,7 +6,7 @@
   "framework": "vite",
   "functions": {
     "api/visitor-count.js": {
-      "runtime": "nodejs18.x"
+      "runtime": "@nodejs18"
     }
   }
 }
