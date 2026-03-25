@@ -211,7 +211,7 @@ const VisitorCounter = () => {
         Atelier Entry #{count?.toString().padStart(4, '0') || '----'}
       </span>
       <p className="text-[10px] font-medium opacity-60 uppercase tracking-widest">
-        {isNewVisitor ? 'Welcome! You are the first' : `You are the ${count ? getOrdinal(count) : '--'} visitor`}
+        {count === 1 ? 'Welcome! You are the first' : `You are the ${count ? getOrdinal(count) : '--'} visitor`}
       </p>
     </div>
   );
