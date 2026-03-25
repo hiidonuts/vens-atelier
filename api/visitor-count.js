@@ -1,70 +1,65 @@
-import fs from 'fs';
-import path from 'path';
+import { config } from 'dotenv';
+import { createClient } from '@supabase/supabase-js';
 import { randomBytes } from 'crypto';
 
-const VISITOR_DATA_FILE = path.join(process.cwd(), 'visitor-data.json');
+config({ path: '.env.local' });
 
-// Initialize visitor data file if it doesn't exist
-function initializeVisitorData() {
-  if (!fs.existsSync(VISITOR_DATA_FILE)) {
-    const initialData = {
-      uniqueSessions: [],
-      count: 0,
-      lastUpdated: new Date().toISOString()
-    };
-    fs.writeFileSync(VISITOR_DATA_FILE, JSON.stringify(initialData, null, 2));
-  }
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+if (!supabaseUrl || !supabaseKey) {
+  console.error('Missing Supabase environment variables');
 }
 
-// Read visitor data from file
-function readVisitorData() {
-  try {
-    const data = fs.readFileSync(VISITOR_DATA_FILE, 'utf8');
-    return JSON.parse(data);
-  } catch (error) {
-    console.log('Error reading visitor data, initializing:', error.message);
-    initializeVisitorData();
-    return { uniqueSessions: [], count: 0, lastUpdated: new Date().toISOString() };
-  }
-}
+const supabase = createClient(supabaseUrl, supabaseKey);
 
-// Write visitor data to file
-function writeVisitorData(data) {
-  try {
-    data.lastUpdated = new Date().toISOString();
-    fs.writeFileSync(VISITOR_DATA_FILE, JSON.stringify(data, null, 2));
-  } catch (error) {
-    console.error('Error writing visitor data:', error);
-  }
-}
-
-// Generate a unique session ID
 function generateSessionId() {
   return 'session_' + randomBytes(16).toString('hex');
 }
 
-// Set session cookie
 function setSessionCookie(res, sessionId) {
-  const cookieValue = `visitor-session=${sessionId}; HttpOnly; Secure; SameSite=Strict; Max-Age=${365 * 24 * 60 * 60}`; // 1 year
+  const cookieValue = `visitor-session=${sessionId}; HttpOnly; Secure; SameSite=Strict; Max-Age=${365 * 24 * 60 * 60}`;
   res.setHeader('Set-Cookie', cookieValue);
 }
 
-// Get session ID from request
 function getSessionId(req) {
-  // Check for session cookie first
   const cookies = req.headers.cookie || '';
   const sessionMatch = cookies.match(/visitor-session=([^;]+)/);
   if (sessionMatch) {
     return sessionMatch[1];
   }
   
-  // Check for custom header as fallback
   const customSessionId = req.headers['x-visitor-session'];
   if (customSessionId) {
     return customSessionId;
   }
   
   return null;
+}
+
+async function initializeVisitorCounter() {
+  try {
+    const { data, error } = await supabase
+      .from('visitor_stats')
+      .select('count')
+      .single();
+
+    if (error && error.code === 'PGRST116') {
+      const { error: insertError } = await supabase
+        .from('visitor_stats')
+        .insert({ count: 0, unique_sessions: [] });
+      
+      if (insertError) {
+        console.error('Error initializing visitor counter:', insertError);
+      } else {
+        console.log('Visitor counter initialized');
+      }
+    } else if (error) {
+      console.error('Error checking visitor counter:', error);
+    }
+  } catch (error) {
+    console.error('Error in initializeVisitorCounter:', error);
+  }
 }
 
 export default async function handler(req, res) {
@@ -81,7 +76,6 @@ export default async function handler(req, res) {
       return res.status(405).json({ error: 'Method not allowed' });
     }
 
-    // Get existing session ID or create new one
     let sessionId = getSessionId(req);
     let isNewSession = false;
     
@@ -94,12 +88,27 @@ export default async function handler(req, res) {
 
     console.log('Processing visitor session:', sessionId);
 
-    // Initialize and read visitor data
-    initializeVisitorData();
-    let visitorData = readVisitorData();
-    
-    // Use Set for unique session tracking
-    let uniqueSessions = new Set(visitorData.uniqueSessions || []);
+    await initializeVisitorCounter();
+
+    let visitorData;
+    try {
+      const { data, error } = await supabase
+        .from('visitor_stats')
+        .select('*')
+        .single();
+
+      if (error) {
+        console.error('Error fetching visitor data:', error);
+        return res.status(500).json({ error: 'Database error' });
+      }
+
+      visitorData = data;
+    } catch (error) {
+      console.error('Error in database query:', error);
+      return res.status(500).json({ error: 'Database error' });
+    }
+
+    let uniqueSessions = new Set(visitorData.unique_sessions || []);
     let visitorCount = visitorData.count || 0;
 
     const isNewVisitor = !uniqueSessions.has(sessionId);
@@ -108,14 +117,26 @@ export default async function handler(req, res) {
       uniqueSessions.add(sessionId);
       visitorCount++;
       
-      // Update visitor data
-      visitorData.uniqueSessions = [...uniqueSessions];
-      visitorData.count = visitorCount;
-      
-      // Save to file
-      writeVisitorData(visitorData);
-      
-      console.log('New visitor session', sessionId, 'added. Total count:', visitorCount);
+      try {
+        const { error: updateError } = await supabase
+          .from('visitor_stats')
+          .update({
+            count: visitorCount,
+            unique_sessions: [...uniqueSessions],
+            updated_at: new Date().toISOString()
+          })
+          .eq('id', visitorData.id);
+
+        if (updateError) {
+          console.error('Error updating visitor data:', updateError);
+          return res.status(500).json({ error: 'Database update error' });
+        }
+
+        console.log('New visitor session', sessionId, 'added. Total count:', visitorCount);
+      } catch (error) {
+        console.error('Error updating database:', error);
+        return res.status(500).json({ error: 'Database update error' });
+      }
     }
 
     res.status(200).json({
@@ -123,7 +144,7 @@ export default async function handler(req, res) {
       isNewVisitor: isNewVisitor,
       sessionId: sessionId,
       isNewSession: isNewSession,
-      message: 'Using JSON file storage with session tracking'
+      message: 'Using Supabase persistent storage'
     });
   } catch (error) {
     console.error('Visitor count error:', error);
