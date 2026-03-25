@@ -76,7 +76,7 @@
     "image": "/solar/solar.png",
     "description": "Interactive 3D visualisation of the solar system, featuring real orbital mechanics based on Kepler's equations.",
     "stack": ["Three.js", "WebGL", "Javascript"],
-    "demoUrl": null,
+    "demoUrl": "https://github.com/hiidonuts/solar-system",
     "images": [
       "/solar/solar.png"
     ]
