@@ -154,6 +154,15 @@
   .modal-scrollable {
     pointer-events: auto !important;
   }
+  
+  /* Force cursor hidden on all scrollbar elements */
+  *::-webkit-scrollbar,
+  *::-webkit-scrollbar-track,
+  *::-webkit-scrollbar-thumb,
+  *::-webkit-scrollbar-corner,
+  *::-webkit-scrollbar-resizer {
+    cursor: none !important;
+  }
 }
 
 /* Custom scrollbar styling */
@@ -176,6 +185,15 @@
   opacity: 0.4;
 }
 
+/* Ensure scrollbar thumb doesn't show default cursor */
+::-webkit-scrollbar-thumb {
+  cursor: none !important;
+}
+
+::-webkit-scrollbar-track {
+  cursor: none !important;
+}
+
 /* Firefox scrollbar styling */
 * {
   scrollbar-width: thin;
@@ -185,8 +203,14 @@
 /* Enhanced scrollbar for modal content */
 .modal-scrollable::-webkit-scrollbar-thumb {
   opacity: 0.15;
+  cursor: none !important;
 }
 
 .modal-scrollable::-webkit-scrollbar-thumb:hover {
   opacity: 0.3;
+  cursor: none !important;
+}
+
+.modal-scrollable::-webkit-scrollbar-track {
+  cursor: none !important;
 }

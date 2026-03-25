@@ -134,7 +134,7 @@
     "year": "Aug. 2025",
     "category": "Interactive",
     "image": "/nowhere/nowhere.png",
-    "description": "Web-based game for players to guess real-world locations using Google Maps and Street View imagery.",
+    "description": "Web-based game for players to guess real-world locations using Google Maps and Street View imagery. Players gain XP and Score for guesses based on accuracy.",
     "stack": ["Redux", "Typescript", "Vite", "React", "Google Maps API"],
     "demoUrl": null,
     "images": [
@@ -256,7 +256,8 @@
       "/odyssey/odyssey2.png",
       "/odyssey/odyssey3.png",
       "/odyssey/odyssey4.png",
-      "/odyssey/odyssey5.png"
+      "/odyssey/odyssey5.png",
+      "/odyssey/odyssey6.png"
     ]
   }
 ]

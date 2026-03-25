@@ -28,11 +28,19 @@ const CustomCursor = () => {
 
     const handleMouseOver = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
+      
+      // Check if we're in a modal or its scrollable content
       const isInModal = target.closest('.modal-container') || 
                        target.closest('.modal-content') ||
                        target.closest('.modal-scrollable') ||
                        target.closest('.flex-1.overflow-y-auto') ||
                        target.closest('.overflow-y-scroll');
+      
+      // Force custom cursor for all modal-related elements
+      if (isInModal) {
+        setCursorType("default");
+        return;
+      }
       
       if (target.closest(".gallery-card") || target.closest("button") || target.closest("a")) {
         if (target.closest(".gallery-card")) {
@@ -40,26 +48,38 @@ const CustomCursor = () => {
         } else {
           setCursorType("default");
         }
-      } else if (isInModal) {
-        setCursorType("default");
       } else {
+        setCursorType("default");
+      }
+    };
+
+    // Force cursor hidden on scrollbar elements
+    const handleScrollbarInteraction = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (target.tagName === 'HTML' || target.tagName === 'BODY') {
         setCursorType("default");
       }
     };
 
     window.addEventListener("mousemove", handleMouseMove);
     window.addEventListener("mouseover", handleMouseOver);
+    window.addEventListener("mousedown", handleScrollbarInteraction);
     
     const style = document.createElement('style');
     style.innerHTML = `
       * { cursor: none !important; }
       input, textarea { cursor: text !important; }
+      /* Force cursor hidden on all scrollbar pseudo-elements */
+      *::-webkit-scrollbar, *::-webkit-scrollbar-track, *::-webkit-scrollbar-thumb, *::-webkit-scrollbar-corner, *::-webkit-scrollbar-resizer {
+        cursor: none !important;
+      }
     `;
     document.head.appendChild(style);
 
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("mouseover", handleMouseOver);
+      window.removeEventListener("mousedown", handleScrollbarInteraction);
       document.head.removeChild(style);
     };
   }, []);
@@ -841,10 +861,10 @@ const ProjectModal = ({ project, onClose }: { project: WorkItem | null, onClose:
               <span className="text-[10px] font-bold tracking-[0.4em] uppercase opacity-40 mb-4 block">
                 {project.year} / {project.category}
               </span>
-              <h2 className="text-4xl md:text-5xl font-display font-bold tracking-tighter leading-none mb-8">
+              <h2 className="text-4xl md:text-6xl font-display font-bold tracking-tighter leading-none mb-8">
                 {project.title}
               </h2>
-              <p className="text-lg font-light leading-relaxed opacity-60 max-w-3xl">
+              <p className="text-lg font-light leading-relaxed opacity-70 max-w-4xl">
                 {project.description}
               </p>
             </div>
@@ -860,13 +880,13 @@ const ProjectModal = ({ project, onClose }: { project: WorkItem | null, onClose:
               </div>
             </div>
 
+            {project.demoUrl && (
             <div className="pt-12 border-t border-current border-opacity-10 flex flex-col sm:flex-row gap-6">
-              {project.demoUrl && (
-                <a href={project.demoUrl} target="_blank" rel="noopener noreferrer" className="flex-1 bg-[var(--text)] text-[var(--bg)] text-center py-4 font-bold text-[11px] tracking-widest uppercase hover:bg-[var(--bg)] hover:text-[var(--text)] border border-current border-opacity-10 transition-colors">
-                  Launch Project
-                </a>
-              )}
+              <a href={project.demoUrl} target="_blank" rel="noopener noreferrer" className="flex-1 bg-[var(--text)] text-[var(--bg)] text-center py-4 font-bold text-[11px] tracking-widest uppercase hover:bg-[var(--bg)] hover:text-[var(--text)] border border-current border-opacity-10 transition-colors">
+                Launch Project
+              </a>
             </div>
+          )}
           </div>
         </motion.div>
       </motion.div>
