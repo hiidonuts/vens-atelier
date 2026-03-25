@@ -1,3 +1,5 @@
+import { get, set } from '@vercel/edge-config';
+
 export default async function handler(req, res) {
   try {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -19,15 +21,34 @@ export default async function handler(req, res) {
 
     console.log('Processing visitor:', visitorId);
 
-    // Fallback: Use simple in-memory counter
-    // Note: This will reset on each deployment but provides basic functionality
-    let count = 1; // Start with 1 for first visitor
-    let isNew = true;
+    // Get current visitor data from Edge Config
+    let visitorData = await get('visitor-data');
+    let uniqueVisitors = new Set();
+    let visitorCount = 0;
+
+    if (visitorData) {
+      uniqueVisitors = new Set(JSON.parse(visitorData.visitors || '[]'));
+      visitorCount = visitorData.count || 0;
+    }
+
+    const isNew = !uniqueVisitors.has(visitorId);
+    
+    if (isNew) {
+      uniqueVisitors.add(visitorId);
+      visitorCount++;
+      console.log('New visitor added. Total count:', visitorCount);
+    }
+
+    // Save updated data back to Edge Config
+    await set('visitor-data', {
+      visitors: JSON.stringify([...uniqueVisitors]),
+      count: visitorCount
+    });
 
     res.status(200).json({
-      count,
+      count: visitorCount,
       isNewVisitor: isNew,
-      message: 'Using fallback counter - Vercel KV not configured'
+      message: 'Using Edge Config storage'
     });
   } catch (error) {
     console.error('Visitor count error:', error);
