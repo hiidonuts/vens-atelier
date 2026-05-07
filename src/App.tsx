@@ -167,17 +167,6 @@ const VisitorCounter = () => {
   const [count, setCount] = useState<number | null>(null);
   const [isNewVisitor, setIsNewVisitor] = useState(false);
 
-  const getVisitorId = () => {
-    let visitorId = localStorage.getItem('visitor-id');
-    if (!visitorId) {
-      const timestamp = Date.now();
-      const random = Math.random().toString(36).substr(2, 9);
-      visitorId = `visitor_${timestamp}_${random}`;
-      localStorage.setItem('visitor-id', visitorId);
-    }
-    return visitorId;
-  };
-
   const getOrdinal = (n: number) => {
     const s = ["th", "st", "nd", "rd"];
     const v = n % 100;
@@ -187,11 +176,9 @@ const VisitorCounter = () => {
   useEffect(() => {
     const fetchCount = async () => {
       try {
-        const visitorId = getVisitorId();
+        // Let the backend handle session cookies automatically
         const response = await axios.get("/api/visitor-count", {
-          headers: {
-            'X-Visitor-ID': visitorId
-          }
+          withCredentials: true // Enable cookie handling
         });
         setCount(response.data.count);
         setIsNewVisitor(response.data.isNewVisitor);

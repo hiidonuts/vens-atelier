@@ -10,7 +10,7 @@ function generateSessionId() {
 }
 
 function setSessionCookie(res, sessionId) {
-  const cookieValue = `visitor-session=${sessionId}; HttpOnly; Secure; SameSite=Strict; Max-Age=${365 * 24 * 60 * 60}`;
+  const cookieValue = `visitor-session=${sessionId}; HttpOnly; SameSite=Strict; Max-Age=${365 * 24 * 60 * 60}`;
   res.setHeader('Set-Cookie', cookieValue);
 }
 
@@ -50,7 +50,9 @@ async function initializeVisitorCounter() {
 
 export default async function handler(req, res) {
   try {
-    res.setHeader('Access-Control-Allow-Origin', '*');
+    // Enable CORS for credentials (cookies)
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5173');
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Visitor-ID, X-Visitor-Session');
     
