@@ -17,6 +17,20 @@ const PORT = 3000;
 app.use(express.json());
 app.use(cookieParser());
 
+// Handle API routes before Vite middleware
+app.all('/api/*', async (req, res, next) => {
+  try {
+    const visitorCountHandler = await import('./api/visitor-count.js');
+    if (req.path === '/api/visitor-count') {
+      return visitorCountHandler.default(req, res);
+    }
+    next();
+  } catch (error) {
+    console.error('API route error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 // Vite middleware for development
 if (process.env.NODE_ENV !== "production") {
   const vite = await createViteServer({

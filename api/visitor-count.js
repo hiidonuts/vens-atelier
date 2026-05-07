@@ -1,17 +1,9 @@
 import { config } from 'dotenv';
-import { createClient } from '@supabase/supabase-js';
+import { db } from '../firebase-config.js';
+import { doc, getDoc, setDoc, updateDoc, arrayUnion } from 'firebase/firestore';
 import { randomBytes } from 'crypto';
 
 config({ path: '.env.local' });
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-if (!supabaseUrl || !supabaseKey) {
-  console.error('Missing Supabase environment variables');
-}
-
-const supabase = createClient(supabaseUrl, supabaseKey);
 
 function generateSessionId() {
   return 'session_' + randomBytes(16).toString('hex');
@@ -39,23 +31,17 @@ function getSessionId(req) {
 
 async function initializeVisitorCounter() {
   try {
-    const { data, error } = await supabase
-      .from('visitor_stats')
-      .select('count')
-      .single();
+    const docRef = doc(db, 'stats', 'visitor_count');
+    const docSnap = await getDoc(docRef);
 
-    if (error && error.code === 'PGRST116') {
-      const { error: insertError } = await supabase
-        .from('visitor_stats')
-        .insert({ count: 0, unique_sessions: [] });
-      
-      if (insertError) {
-        console.error('Error initializing visitor counter:', insertError);
-      } else {
-        console.log('Visitor counter initialized');
-      }
-    } else if (error) {
-      console.error('Error checking visitor counter:', error);
+    if (!docSnap.exists()) {
+      await setDoc(docRef, {
+        count: 0,
+        unique_sessions: [],
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      });
+      console.log('Visitor counter initialized');
     }
   } catch (error) {
     console.error('Error in initializeVisitorCounter:', error);
@@ -92,17 +78,15 @@ export default async function handler(req, res) {
 
     let visitorData;
     try {
-      const { data, error } = await supabase
-        .from('visitor_stats')
-        .select('*')
-        .single();
+      const docRef = doc(db, 'stats', 'visitor_count');
+      const docSnap = await getDoc(docRef);
 
-      if (error) {
-        console.error('Error fetching visitor data:', error);
+      if (!docSnap.exists()) {
+        console.error('Visitor counter document not found');
         return res.status(500).json({ error: 'Database error' });
       }
 
-      visitorData = data;
+      visitorData = docSnap.data();
     } catch (error) {
       console.error('Error in database query:', error);
       return res.status(500).json({ error: 'Database error' });
@@ -118,19 +102,12 @@ export default async function handler(req, res) {
       visitorCount++;
       
       try {
-        const { error: updateError } = await supabase
-          .from('visitor_stats')
-          .update({
-            count: visitorCount,
-            unique_sessions: [...uniqueSessions],
-            updated_at: new Date().toISOString()
-          })
-          .eq('id', visitorData.id);
-
-        if (updateError) {
-          console.error('Error updating visitor data:', updateError);
-          return res.status(500).json({ error: 'Database update error' });
-        }
+        const docRef = doc(db, 'stats', 'visitor_count');
+        await updateDoc(docRef, {
+          count: visitorCount,
+          unique_sessions: arrayUnion(sessionId),
+          updated_at: new Date().toISOString()
+        });
 
         console.log('New visitor session', sessionId, 'added. Total count:', visitorCount);
       } catch (error) {
@@ -144,7 +121,7 @@ export default async function handler(req, res) {
       isNewVisitor: isNewVisitor,
       sessionId: sessionId,
       isNewSession: isNewSession,
-      message: 'Using Supabase persistent storage'
+      message: 'Using Firebase persistent storage'
     });
   } catch (error) {
     console.error('Visitor count error:', error);
