@@ -5,17 +5,17 @@
     "title": "LAST SONG",
     "year": "Oct. 2026",
     "category": "Creative Dev",
-    "image": "/lastsong/lastsong.png",
+    "image": "/lastsong/lastsong.webp",
     "description": "2D pixel art exploration platformer mobile game that combines stealth mechanics to collect music notes in assembling the Last Song. Entities are built with adaptive mechanics based on player's movement and actions to predict their next move.",
     "stack": ["GDScript", "Godot"],
     "demoUrl": null,
     "images": [
-      "/lastsong/lastsong.png",
-      "/lastsong/lastsong1.png",
-      "/lastsong/lastsong2.png",
-      "/lastsong/lastsong3.png",
-      "/lastsong/lastsong4.png",
-      "/lastsong/lastsong5.png"
+      "/lastsong/lastsong.webp",
+      "/lastsong/lastsong1.webp",
+      "/lastsong/lastsong2.webp",
+      "/lastsong/lastsong3.webp",
+      "/lastsong/lastsong4.webp",
+      "/lastsong/lastsong5.webp"
     ]
   },
   {
@@ -24,19 +24,19 @@
     "title": "KAIRO",
     "year": "Mar. 2026 - Oct. 2026",
     "category": "AI & Intelligent Systems",
-    "image": "/kairo/kairo.png",
+    "image": "/kairo/kairo.webp",
     "description": "AI-native Personal Knowledge Management (PKM) desktop study app with agentic + hybrid RAG retrieval (BM25, RRF, MMR) and adaptive personalised learning based on topic mastery level and FSRS algorithms. Developed a companion app for syncing and learning convenience with React Native.",
     "stack": ["Tauri", "PostgreSQL", "TypeScript", "Hugging Face"],
     "demoUrl": "https://kairo-landing.vercel.app/",
     "images": [
-      "/kairo/kairo.png",
-      "/kairo/kairo2.png",
-      "/kairo/kairo3.png",
-      "/kairo/kairo4.png",
-      "/kairo/kairo5.png",
-      "/kairo/kairo6.png",
-      "/kairo/kairo7.png",
-      "/kairo/kairo8.png"
+      "/kairo/kairo.webp",
+      "/kairo/kairo2.webp",
+      "/kairo/kairo3.webp",
+      "/kairo/kairo4.webp",
+      "/kairo/kairo5.webp",
+      "/kairo/kairo6.webp",
+      "/kairo/kairo7.webp",
+      "/kairo/kairo8.webp"
     ]
   },
   {
@@ -45,13 +45,13 @@
     "title": "LORE",
     "year": "Mar. 2026",
     "category": "AI & Intelligent Systems",
-    "image": "/lore/lore.png",
+    "image": "/lore/lore.webp",
     "description": "Desktop writing app that allows avid writers to develop story plots, organise chapters, scenes and versions, build character profiles, and generate story outlines. Read Mode for a clean and immersive reading experience.",
     "stack": ["Drizzle ORM", "SQLite", "Tauri", "TipTap", "Zustand"],
     "demoUrl": null,
     "images": [
-      "/lore/lore.png",
-      "/lore/lore2.png"
+      "/lore/lore.webp",
+      "/lore/lore2.webp"
     ]
   },
   {
@@ -60,14 +60,14 @@
     "title": "VEN'S ATELIER",
     "year": "Feb. - Mar. 2026",
     "category": "Interactive",
-    "image": "/atelier/atelier.png",
+    "image": "/atelier/atelier.webp",
     "description": "Personal portfolio website to showcase my skills and projects. p.s. You're accessing it right now!",
     "stack": ["GSAP", "Framer Motion", "React", "Node.js"],
     "demoUrl": null,
     "images": [
-      "/atelier/atelier.png",
-      "/atelier/atelier2.png",
-      "/atelier/atelier3.png"
+      "/atelier/atelier.webp",
+      "/atelier/atelier2.webp",
+      "/atelier/atelier3.webp"
     ]
   },
   {
@@ -76,17 +76,17 @@
     "title": "PRESSED.",
     "year": "Feb. - Mar. 2026",
     "category": "Commerce & Platforms",
-    "image": "/pressed/pressed.png",
+    "image": "/pressed/pressed.webp",
     "description": "Modern e-commerce vinyl store for collectors alike. Browse catalog, save to collection, rate, and purchase vinyl records through Stripe and view real-time order tracking. Admin dashboard to manage inventory through Discogs API, track orders and revenue statistics.",
     "stack": ["Stripe", "Discogs API", "Vite", "React"],
     "demoUrl": null,
     "images": [
-      "/pressed/pressed.png",
-      "/pressed/pressed2.png",
-      "/pressed/pressed3.png",
-      "/pressed/pressed4.png",
-      "/pressed/pressed5.png",
-      "/pressed/pressed6.png"
+      "/pressed/pressed.webp",
+      "/pressed/pressed2.webp",
+      "/pressed/pressed3.webp",
+      "/pressed/pressed4.webp",
+      "/pressed/pressed5.webp",
+      "/pressed/pressed6.webp"
     ]
   },
   {
@@ -95,16 +95,16 @@
     "title": "ESSENCE",
     "year": "Jan. - Feb. 2026",
     "category": "AI & Intelligent Systems",
-    "image": "/essence/essence.png",
+    "image": "/essence/essence.webp",
     "description": "AI assistant that provides contextual and factual information with citations. Responses are tailored based on user's custom preferences and instructions, enables chat memories for persistent conversations. Supports wide range of languages, e.g. Japanese, Korean, French, etc. Currently under occasional polishing.",
     "stack": ["MERN Stack", "OpenRouter API", "Tailwind CSS"],
     "demoUrl": null,
     "images": [
-      "/essence/essence.png",
-      "/essence/essence2.png",
-      "/essence/essence3.png",
-      "/essence/essence4.png",
-      "/essence/essence5.png"
+      "/essence/essence.webp",
+      "/essence/essence2.webp",
+      "/essence/essence3.webp",
+      "/essence/essence4.webp",
+      "/essence/essence5.webp"
     ]
   },
   {
@@ -113,12 +113,12 @@
     "title": "SOLAR SYSTEM 3D",
     "year": "Feb. 2026",
     "category": "Creative Dev",
-    "image": "/solar/solar.png",
+    "image": "/solar/solar.webp",
     "description": "Interactive 3D visualisation of the solar system, featuring real orbital mechanics based on Kepler's equations, with detailed explanations of each planet. Utlised on rendering, camera controls, raycasting, and dynamic lighting.",
     "stack": ["Three.js", "WebGL", "Javascript"],
     "demoUrl": "https://github.com/hiidonuts/solar-system",
     "images": [
-      "/solar/solar.png"
+      "/solar/solar.webp"
     ]
   },
   {
@@ -127,13 +127,13 @@
     "title": "STUDENT FEEDBACK & SUGGESTION SYSTEM",
     "year": "Dec. 2025 - Jan. 2026",
     "category": "AI & Intelligent Systems",
-    "image": "/feedback/feedback.png",
+    "image": "/feedback/feedback.webp",
     "description": "AI-powered feedback and suggestion system for UMSKAL students with sentiment analysis.",
     "stack": ["Full-Stack", "PHP", "MySQL", "Chart.js", "NLP"],
     "demoUrl": null,
     "images": [
-      "/feedback/feedback.png",
-      "/feedback/feedback2.png"
+      "/feedback/feedback.webp",
+      "/feedback/feedback2.webp"
     ]
   },
   {
@@ -142,12 +142,12 @@
     "title": "BLACK HOLE RAY-TRACING SIMULATION",
     "year": "Dec. 2025",
     "category": "Creative Dev",
-    "image": "/blackhole/blackhole.png",
+    "image": "/blackhole/blackhole.webp",
     "description": "Visualises gravitational lensing, accretion disk, and spacetime curvature using ray-tracing techniques. GPU-accelerated computations with shaders to solve geodesic equations and render 2D and 3D view of light paths.",
     "stack": ["C++", "OpenGL", "CMake"],
     "demoUrl": null,
     "images": [
-      "/blackhole/blackhole.png"
+      "/blackhole/blackhole.webp"
     ]
   },
   {
@@ -156,13 +156,13 @@
     "title": "NOWHERE",
     "year": "Aug. 2025",
     "category": "Interactive",
-    "image": "/nowhere/nowhere.png",
+    "image": "/nowhere/nowhere.webp",
     "description": "Web-based game for players to guess real-world locations using Google Maps and Street View imagery. Players gain XP and Score for guesses based on accuracy.",
     "stack": ["Redux", "Typescript", "Vite", "React", "Google Maps API"],
     "demoUrl": null,
     "images": [
-      "/nowhere/nowhere.png",
-      "/nowhere/nowhere2.png"
+      "/nowhere/nowhere.webp",
+      "/nowhere/nowhere2.webp"
     ]
   },
   {
@@ -171,17 +171,17 @@
     "title": "FERRY TERMINAL MANAGEMENT",
     "year": "Jul. 2025",
     "category": "Systems & Algorithms",
-    "image": "/ferry/ferry.png",
+    "image": "/ferry/ferry.webp",
     "description": "Console-based ferry terminal system for managing ferry operations (passenger and vehicle management, ticketing, scheduling) with data structure and algorithms.",
     "stack": ["C++", "Data Structure", "Algorithms"],
     "demoUrl": null,
     "images": [
-      "/ferry/ferry.png",
-      "/ferry/ferry2.png",
-      "/ferry/ferry3.png",
-      "/ferry/ferry4.png",
-      "/ferry/ferry5.png",
-      "/ferry/ferry6.png"
+      "/ferry/ferry.webp",
+      "/ferry/ferry2.webp",
+      "/ferry/ferry3.webp",
+      "/ferry/ferry4.webp",
+      "/ferry/ferry5.webp",
+      "/ferry/ferry6.webp"
     ]
   },
   {
@@ -190,13 +190,13 @@
     "title": "SNACK ATLAS",
     "year": "Jun. - Jul. 2025",
     "category": "Commerce & Platforms",
-    "image": "/snack/snack.png",
+    "image": "/snack/snack.webp",
     "description": "E-commerce snack shop for customers to browse and purchase snacks with order tracking. Admin panel for managing products and orders.",
     "stack": ["Laragon", "Figma", "HTML/CSS/JS", "MySQL", "PHP"],
     "demoUrl": null,
     "images": [
-      "/snack/snack.png",
-      "/snack/snack2.png"
+      "/snack/snack.webp",
+      "/snack/snack2.webp"
     ]
   },
   {
@@ -205,13 +205,13 @@
     "title": "PROGRESS PACER",
     "year": "Jun. - Jul. 2025",
     "category": "Systems & Algorithms",
-    "image": "/progress/progress.png",
+    "image": "/progress/progress.webp",
     "description": "Group project | Academic management tool for students to track academic performance with personalised feedback, with task management, grade calculation, and progress visualization.",
     "stack": ["Laragon", "Figma", "HTML/CSS/JS", "MySQL", "PHP"],
     "demoUrl": "https://github.com/hiidonuts/ProgressPacer",
     "images": [
-      "/progress/progress.png",
-      "/progress/progress2.png"
+      "/progress/progress.webp",
+      "/progress/progress2.webp"
     ]
   },
   {
@@ -220,14 +220,14 @@
     "title": "LIMBO",
     "year": "Apr. 2025",
     "category": "Creative Dev",
-    "image": "/limbo/limbo.png",
+    "image": "/limbo/limbo.webp",
     "description": "Personal website for showcasing interactive 3D environments with user-controlled character movements.",
     "stack": ["HTML/CSS/JS", "Spline", "Git"],
     "demoUrl": "https://hiidonuts.github.io/limbo/",
     "images": [
-      "/limbo/limbo.png",
-      "/limbo/limbo2.png",
-      "/limbo/limbo3.png"
+      "/limbo/limbo.webp",
+      "/limbo/limbo2.webp",
+      "/limbo/limbo3.webp"
     ]
   },
   {
@@ -236,15 +236,15 @@
     "title": "ONLINE GROCERY SYSTEM",
     "year": "May 2024",
     "category": "Systems & Algorithms",
-    "image": "/grocery/grocery.png",
+    "image": "/grocery/grocery.webp",
     "description": "GUI-based grocery system for purchasing goods with checkout functionalities and grocery receipt as order confirmation.",
     "stack": ["Java", "GUI", "Object Oriented Programming"],
     "demoUrl": null,
     "images": [
-      "/grocery/grocery.png",
-      "/grocery/grocery2.png",
-      "/grocery/grocery3.png",
-      "/grocery/grocery4.png"
+      "/grocery/grocery.webp",
+      "/grocery/grocery2.webp",
+      "/grocery/grocery3.webp",
+      "/grocery/grocery4.webp"
     ]
   },
   {
@@ -253,15 +253,15 @@
     "title": "ESPRESSO EMPORIUM",
     "year": "Apr. 2023",
     "category": "Commerce & Platforms",
-    "image": "/espresso/espresso.png",
+    "image": "/espresso/espresso.webp",
     "description": "French language themed café website with an emphasis on frontend design and user-centricity.",
     "stack": ["UI/UX", "Google Maps API", "Netlify", "HTML/CSS/JS"],
     "demoUrl": "https://espressoemporium.netlify.app/",
     "images": [
-      "/espresso/espresso.png",
-      "/espresso/espresso2.png",
-      "/espresso/espresso3.png",
-      "/espresso/espresso4.png"
+      "/espresso/espresso.webp",
+      "/espresso/espresso2.webp",
+      "/espresso/espresso3.webp",
+      "/espresso/espresso4.webp"
     ]
   },
   {
@@ -270,17 +270,17 @@
     "title": "FOOD ODYSSEY",
     "year": "Jan. - Mar. 2025",
     "category": "Interactive",
-    "image": "/odyssey/odyssey.png",
+    "image": "/odyssey/odyssey.webp",
     "description": "Foundation level FYP project showcasing various culinary delights globally (Asia, Europe, Africa, Middle East, North & South America), with 360° interactive panorama environment view.",
     "stack": ["360° View", "Netlify", "Google Maps API", "HTML/CSS/JS"],
     "demoUrl": null,
     "images": [
-      "/odyssey/odyssey.png",
-      "/odyssey/odyssey2.png",
-      "/odyssey/odyssey3.png",
-      "/odyssey/odyssey4.png",
-      "/odyssey/odyssey5.png",
-      "/odyssey/odyssey6.png"
+      "/odyssey/odyssey.webp",
+      "/odyssey/odyssey2.webp",
+      "/odyssey/odyssey3.webp",
+      "/odyssey/odyssey4.webp",
+      "/odyssey/odyssey5.webp",
+      "/odyssey/odyssey6.webp"
     ]
   }
 ]

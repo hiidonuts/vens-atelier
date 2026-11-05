@@ -238,6 +238,8 @@ const WorkCard: React.FC<PosterCardProps> = ({ poster, index, onOpenDetail }) =>
         <img 
           src={poster.image} 
           alt={poster.title}
+          loading={index < 3 ? "eager" : "lazy"}
+          decoding="async"
           referrerPolicy="no-referrer"
           className="w-full h-full object-cover grayscale contrast-[0.95] transition-[filter,transform] duration-700 ease-out scale-105 group-hover:grayscale-0 group-hover:contrast-100 group-hover:scale-100"
         />
@@ -580,6 +582,8 @@ const ProjectModal = ({ project, onClose }: { project: WorkItem | null, onClose:
             <img 
               src={images[currentImageIndex]} 
               alt={project.title} 
+              loading="lazy"
+              decoding="async"
               className="w-full h-full object-cover opacity-60 group-hover/image:opacity-100 transition-opacity duration-500"
               referrerPolicy="no-referrer"
             />
@@ -1065,8 +1069,10 @@ export default function App() {
                 className="relative aspect-[4/5] w-full max-w-[420px] mx-auto overflow-hidden shadow-2xl"
               >
                 <img 
-                  src="/hero.png" 
+                  src="/hero.webp" 
                   alt="Featured Work"
+                  fetchPriority="high"
+                  decoding="async"
                   referrerPolicy="no-referrer"
                   className="w-full h-full object-cover"
                 />
