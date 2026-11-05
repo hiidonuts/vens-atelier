@@ -1,6 +1,7 @@
-import { motion, useScroll, useTransform, AnimatePresence, useMotionValue, useSpring, LayoutGroup, useInView } from "motion/react";
-import { ArrowRight, Menu, Plus, X, ArrowDown, ArrowUp, Github, Instagram, Linkedin, Sun, Moon, Terminal, ExternalLink, ChevronLeft, ChevronRight } from "lucide-react";
+import { motion, useScroll, useTransform, AnimatePresence, useMotionValue, useSpring, useInView } from "motion/react";
+import { ArrowRight, Menu, Plus, X, ArrowDown, ArrowUp, Github, Instagram, Linkedin, Sun, Moon, Terminal, ChevronLeft, ChevronRight } from "lucide-react";
 import React, { useRef, useState, useMemo, useEffect, useLayoutEffect } from "react";
+import { createPortal } from "react-dom";
 import axios from "axios";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -12,8 +13,25 @@ const POSTERS = POSTERS_DATA as WorkItem[];
 
 gsap.registerPlugin(ScrollTrigger);
 
+const getCursorTypeFromTarget = (target: Element | null): "default" | "view" | "view-image" | "caret" => {
+  if (!(target instanceof Element)) return "default";
+
+  if (target.closest(".modal-image-container")) return "view-image";
+
+  const isInModal =
+    target.closest(".modal-container") ||
+    target.closest(".modal-content") ||
+    target.closest(".modal-scrollable") ||
+    target.closest(".flex-1.overflow-y-auto") ||
+    target.closest(".overflow-y-scroll");
+
+  if (isInModal) return "default";
+  if (target.closest(".gallery-card")) return "view";
+  return "default";
+};
+
 const CustomCursor = () => {
-  const [cursorType, setCursorType] = useState<"default" | "view">("default");
+  const [cursorType, setCursorType] = useState<"default" | "view" | "view-image" | "caret">("default");
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
@@ -24,42 +42,17 @@ const CustomCursor = () => {
     const handleMouseMove = (e: MouseEvent) => {
       mouseX.set(e.clientX);
       mouseY.set(e.clientY);
-    };
-
-    const handleMouseOver = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      
-      const isInModal = target.closest('.modal-container') || 
-                       target.closest('.modal-content') ||
-                       target.closest('.modal-scrollable') ||
-                       target.closest('.flex-1.overflow-y-auto') ||
-                       target.closest('.overflow-y-scroll');
-      
-      if (isInModal) {
-        setCursorType("default");
-        return;
-      }
-      
-      if (target.closest(".gallery-card") || target.closest("button") || target.closest("a")) {
-        if (target.closest(".gallery-card")) {
-          setCursorType("view");
-        } else {
-          setCursorType("default");
-        }
-      } else {
-        setCursorType("default");
-      }
+      setCursorType(getCursorTypeFromTarget(document.elementFromPoint(e.clientX, e.clientY)));
     };
 
     const handleScrollbarInteraction = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
-      if (target.tagName === 'HTML' || target.tagName === 'BODY') {
+      if (target.tagName === "HTML" || target.tagName === "BODY") {
         setCursorType("default");
       }
     };
 
     window.addEventListener("mousemove", handleMouseMove);
-    window.addEventListener("mouseover", handleMouseOver);
     window.addEventListener("mousedown", handleScrollbarInteraction);
     
     const style = document.createElement('style');
@@ -75,15 +68,14 @@ const CustomCursor = () => {
 
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("mouseover", handleMouseOver);
       window.removeEventListener("mousedown", handleScrollbarInteraction);
       document.head.removeChild(style);
     };
   }, []);
 
-  return (
+  return createPortal(
     <motion.div 
-      className="fixed top-0 left-0 z-[1000] pointer-events-none flex items-start gap-4"
+      className="fixed top-0 left-0 z-[99999] pointer-events-none flex items-start gap-4"
       style={{ x: cursorX, y: cursorY }}
     >
       {cursorType !== "caret" && (
@@ -106,7 +98,7 @@ const CustomCursor = () => {
     )}
 
       {cursorType === "caret" && (
-        <div className="w-[1px] h-5 bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+        <div className="w-[1px] h-5 bg-[var(--accent)]" />
       )}
 
       <AnimatePresence>
@@ -117,11 +109,12 @@ const CustomCursor = () => {
             exit={{ opacity: 0, scale: 0.8, x: -10 }}
             className="bg-white text-black text-[9px] font-bold px-3 py-1.5 rounded-sm shadow-xl tracking-[0.2em] border border-black/10 whitespace-nowrap"
           >
-            {cursorType === "view" ? "VIEW" : "VIEW PROJECT IMAGE"}
+            {cursorType === "view" ? "VIEW" : "CHECK IT OUT"}
           </motion.div>
         )}
       </AnimatePresence>
-    </motion.div>
+    </motion.div>,
+    document.body
   );
 };
 
@@ -221,15 +214,7 @@ interface PosterCardProps {
 }
 
 const WorkCard: React.FC<PosterCardProps> = ({ poster, index, onOpenDetail }) => {
-  const isProject = poster.type === "Projects";
-  const archivalTimestamp = useMemo(() => {
-    const months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
-    const day = Math.floor(Math.random() * 28) + 1;
-    const month = months[Math.floor(Math.random() * 12)];
-    const hour = Math.floor(Math.random() * 24).toString().padStart(2, '0');
-    const minute = Math.floor(Math.random() * 60).toString().padStart(2, '0');
-    return `${day} ${month} ${poster.year} · ${hour}:${minute} AM`;
-  }, [poster.year]);
+  const number = String(index + 1).padStart(2, "0");
 
   return (
     <motion.div 
@@ -238,85 +223,34 @@ const WorkCard: React.FC<PosterCardProps> = ({ poster, index, onOpenDetail }) =>
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.9 }}
       onClick={() => onOpenDetail(poster)}
-      whileHover={{ 
-        scale: 1.02,
-        boxShadow: "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)"
-      }}
+      whileHover={{ scale: 1.015 }}
       transition={{ 
         duration: 0.4, 
         ease: [0.23, 1, 0.32, 1]
       }}
-      className="gallery-card group relative flex-shrink-0 w-[75vw] md:w-[450px] lg:w-[500px] aspect-[3/4] max-h-[55vh] md:max-h-[60vh] overflow-hidden bg-[#111] cursor-pointer z-10 shadow-2xl flex flex-col"
+      className="gallery-card group relative flex-shrink-0 w-[72vw] md:w-[420px] lg:w-[480px] aspect-[3/4] max-h-[58vh] md:max-h-[62vh] overflow-hidden bg-[#111] cursor-pointer z-10"
     >
-      <div className={`relative overflow-hidden ${isProject ? 'h-[60%]' : 'h-full'}`}>
-        <div className="absolute top-4 left-4 z-10 flex flex-col gap-1">
-          <span className="text-[9px] font-bold tracking-widest uppercase bg-white text-black px-2 py-0.5 w-fit">
-            {poster.year}
-          </span>
-          {!isProject && (
-            <span className="text-[10px] font-medium tracking-tight text-white/60 italic font-serif">
-              {poster.category}
-            </span>
-          )}
-        </div>
-        
-        <motion.img 
+      <div className="relative w-full h-full overflow-hidden">
+        <span className="absolute top-5 left-5 z-10 font-mono text-[11px] tracking-[0.2em] text-white/55">
+          {number}
+        </span>
+
+        <img 
           src={poster.image} 
           alt={poster.title}
           referrerPolicy="no-referrer"
-          className={`w-full h-full object-cover transition-all duration-700 ease-out scale-105 group-hover:scale-100 ${!isProject ? 'grayscale group-hover:grayscale-0' : ''}`}
+          className="w-full h-full object-cover grayscale contrast-[0.95] transition-[filter,transform] duration-700 ease-out scale-105 group-hover:grayscale-0 group-hover:contrast-100 group-hover:scale-100"
         />
 
-        {!isProject && (
-          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-8 text-white">
-            <motion.h3 className="text-3xl font-display font-bold tracking-tighter mb-2">
-              {poster.title}
-            </motion.h3>
-            <p className="text-sm font-light leading-relaxed opacity-80 max-w-[280px]">
-              {poster.description}
-            </p>
-            <div className="mt-6 flex items-center gap-2 text-[10px] font-bold tracking-[0.2em] uppercase">
-              View Detail <ArrowRight size={14} />
-            </div>
-          </div>
-        )}
-      </div>
-
-      {isProject && (
-        <div className="flex-1 p-8 flex flex-col bg-black text-white border-t border-white/10">
-          <div className="flex justify-between items-start mb-4">
-            <h3 className="text-3xl font-display font-bold tracking-tighter leading-none">
-              {poster.title}
-            </h3>
-            <span className="text-[10px] font-bold tracking-widest uppercase opacity-40">
-              {poster.category}
-            </span>
-          </div>
-          
-          <p className="text-sm font-light leading-relaxed text-white/60 mb-8 line-clamp-2">
-            {poster.description}
+        <div className="absolute inset-x-0 bottom-0 p-6 md:p-8 bg-gradient-to-t from-black/75 via-black/25 to-transparent">
+          <h3 className="text-2xl md:text-3xl font-display font-bold tracking-tighter leading-none">
+            {poster.title}
+          </h3>
+          <p className="mt-3 text-[10px] font-medium tracking-[0.22em] uppercase text-white/50">
+            {poster.category}
           </p>
-
-          <div className="mt-auto relative">
-            <div className="flex flex-wrap gap-2 w-full pr-14">
-              {poster.stack?.map((tech) => (
-                <span key={tech} className="text-[8px] font-bold tracking-widest uppercase px-2 py-1 border border-white/10 opacity-40">
-                  {tech}
-                </span>
-              ))}
-            </div>
-            <div 
-              onClick={(e) => {
-                e.stopPropagation();
-                onOpenDetail(poster);
-              }}
-              className="absolute bottom-0 right-0 w-10 h-10 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all duration-300"
-            >
-              <ArrowRight size={18} />
-            </div>
-          </div>
         </div>
-      )}
+      </div>
     </motion.div>
   );
 };
@@ -359,54 +293,8 @@ const TiltCard = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-const LatestTicker = () => {
-  const works = ["UI/UX", "MERN Stack", "Creative Dev"];
-  return (
-    <div className="overflow-hidden h-4">
-      <motion.div
-        animate={{ y: [0, -16, -32, 0] }}
-        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", times: [0, 0.33, 0.66, 1] }}
-      >
-        {works.map((work) => (
-          <div key={work} className="h-4 text-xs font-display font-bold uppercase">
-            {work}
-          </div>
-        ))}
-      </motion.div>
-    </div>
-  );
-};
-
-const LocalTime = () => {
-  const [time, setTime] = useState("");
-
-  useEffect(() => {
-    const updateTime = () => {
-      const now = new Date();
-      const formatter = new Intl.DateTimeFormat("en-GB", {
-        timeZone: "Asia/Kuching",
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-        hour12: false,
-      });
-      setTime(formatter.format(now));
-    };
-
-    updateTime();
-    const interval = setInterval(updateTime, 1000);
-    return () => clearInterval(interval);
-  }, []);
-
-  return (
-    <span className="font-mono text-[10px] tracking-widest opacity-40">
-      {time} KK/MY
-    </span>
-  );
-};
-
 const LastUpdated = () => {
-  const timestamp = "25 MAR 2026, 15:56 (GMT +8)";
+  const timestamp = "5 NOV 2026 12:31PM (GMT +8)";
 
   return (
     <span className="text-[10px] font-mono opacity-30 uppercase tracking-[0.2em]">
@@ -540,13 +428,13 @@ const TerminalHobbies = () => {
         response = "Available: about, skills, contact, secret, clear";
         break;
       case "about":
-        response = "I'm currently a third year student pursuing B.IT. Business Computing at University Malaysia Sabah";
+        response = "I'm currently a final year student pursuing B.IT. Business Computing at University Malaysia Sabah";
         break;
       case "skills":
-        response = "MERN Stack, Vite, TypeScript, GSAP, Framer Motion, UI/UX Design, SQL/NoSQL Databases, Git/Github";
+        response = "AI Development, MERN Stack, TypeScript, GSAP, Game Development, UI/UX Design";
         break;
       case "contact":
-        response = "Gmail: venicevkx@gmail.com";
+        response = "Gmail: venvkx@gmail.com";
         break;
       case "secret":
         response = "📖 Addicted to reading fictional novels";
@@ -578,24 +466,24 @@ const TerminalHobbies = () => {
           onTouchMove={(e) => e.stopPropagation()}
         >
           {lines.map((line, i) => (
-            <div key={i} className={line.includes("vens-atelier") ? "text-emerald-500" : "opacity-70"}>
+            <div key={i} className={line.includes("vens-atelier") ? "text-[var(--email)]" : "opacity-70"}>
               {line}
               {!isDone && i === lines.length - 1 && (
-                <span className={`inline-block w-1.5 h-3 bg-emerald-500 ml-1 align-middle transition-opacity duration-100 terminal-cursor ${cursorVisible ? 'opacity-100' : 'opacity-0'}`} />
+                <span className={`inline-block w-1.5 h-3 bg-[var(--email)] ml-1 align-middle transition-opacity duration-100 terminal-cursor ${cursorVisible ? 'opacity-100' : 'opacity-0'}`} />
               )}
             </div>
           ))}
           {isDone && (
             <>
-              <div className="text-emerald-500/50 mt-2 mb-4">done in {timeTaken.toFixed(1)}s ✓</div>
+              <div className="text-[var(--email)]/50 mt-2 mb-4">done in {timeTaken.toFixed(1)}s ✓</div>
               
               {history.map((h, i) => (
-                <div key={i} className={h.includes("vens-atelier") ? "text-emerald-500" : "opacity-75"}>
+                <div key={i} className={h.includes("vens-atelier") ? "text-[var(--email)]" : "opacity-75"}>
                   {h}
                 </div>
               ))}
               <form onSubmit={handleCommand} className="flex items-center">
-                <span className="text-emerald-500 mr-2">vens-atelier:~$</span>
+                <span className="text-[var(--email)] mr-2">vens-atelier:~$</span>
                 <div className="relative flex-1 flex items-center">
                   <input 
                     type="text" 
@@ -608,7 +496,7 @@ const TerminalHobbies = () => {
                   />
                   <div className="flex items-center pointer-events-none">
                     <span className="text-[var(--text)] opacity-70 whitespace-pre">{input}</span>
-                    <span className={`w-1.5 h-3 bg-emerald-500 ml-0.5 transition-opacity duration-100 terminal-cursor ${cursorVisible ? 'opacity-100' : 'opacity-0'}`} />
+                    <span className={`w-1.5 h-3 bg-[var(--email)] ml-0.5 transition-opacity duration-100 terminal-cursor ${cursorVisible ? 'opacity-100' : 'opacity-0'}`} />
                   </div>
                 </div>
               </form>
@@ -620,7 +508,7 @@ const TerminalHobbies = () => {
       <div className="h-[70px] mt-4 px-1 flex flex-col gap-0.5">
         {isDone && (
           <>
-            <div className="text-[10px] text-red-500/60 uppercase tracking-[0.2em] font-mono">Available Commands</div>
+            <div className="text-[10px] text-[var(--email)]/70 uppercase tracking-[0.2em] font-mono">Available Commands</div>
             <div className="text-[10px] opacity-50 font-mono tracking-widest">help, about, skills, contact, secret, clear</div>
           </>
         )}
@@ -830,7 +718,7 @@ const ProjectModal = ({ project, onClose }: { project: WorkItem | null, onClose:
 
             {project.demoUrl && (
             <div className="pt-12 border-t border-current border-opacity-10 flex flex-col sm:flex-row gap-6">
-              <a href={project.demoUrl} target="_blank" rel="noopener noreferrer" className="flex-1 bg-[var(--text)] text-[var(--bg)] text-center py-4 font-bold text-[11px] tracking-widest uppercase hover:bg-[var(--bg)] hover:text-[var(--text)] border border-current border-opacity-10 transition-colors">
+              <a href={project.demoUrl} target="_blank" rel="noopener noreferrer" className="flex-1 bg-[var(--accent)] text-[var(--bg)] text-center py-4 font-bold text-[11px] tracking-widest uppercase hover:opacity-85 transition-opacity">
                 Launch Project
               </a>
             </div>
@@ -848,6 +736,7 @@ export default function App() {
   const [selectedProject, setSelectedProject] = useState<WorkItem | null>(null);
   const [isDark, setIsDark] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isTerminalOpen, setIsTerminalOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const heroRef = useRef<HTMLDivElement>(null);
@@ -969,7 +858,7 @@ export default function App() {
     };
   }, []);
 
-  const scrollToSection = (ref: React.RefObject<HTMLDivElement>) => {
+  const scrollToSection = (ref: React.RefObject<HTMLDivElement | null>) => {
     ref.current?.scrollIntoView({ behavior: "smooth" });
   };
 
@@ -995,9 +884,6 @@ export default function App() {
   const xRaw = useTransform(scrollYProgress, [0, 1], [0, -scrollRange]);
   const x = useSpring(xRaw, { stiffness: 100, damping: 20, restDelta: 0.001 });
 
-  const { scrollY } = useScroll();
-  const parallaxY = useTransform(scrollY, [0, 2000], [0, 400]);
-
   const handleCategoryChange = (cat: string) => {
     setSelectedCategory(cat);
     if (containerRef.current) {
@@ -1016,20 +902,12 @@ export default function App() {
         onClose={() => setSelectedProject(null)} 
       />
 
-      <motion.div 
-        style={{ y: parallaxY }}
-        className="fixed top-0 left-0 w-full h-full pointer-events-none z-0 opacity-[0.03]"
-      >
-        <div className="absolute top-[10%] left-[5%] w-[40vw] h-[40vw] border-[1px] border-current rounded-full" />
-        <div className="absolute top-[60%] right-[10%] w-[30vw] h-[30vw] border-[1px] border-current rotate-45" />
-      </motion.div>
-
-      <div className="sidebar-branding fixed right-2 top-1/2 -translate-y-1/2 z-50 hidden lg:flex flex-col items-center gap-8">
-        <div className="w-[1px] h-24 bg-current opacity-10" />
-        <span className="text-[9px] font-bold tracking-[0.5em] uppercase [writing-mode:vertical-rl] opacity-30 text-center">
-          EST. 2026 <br /> VEN'S ATELIER
+      <div className="sidebar-branding fixed right-3 top-1/2 -translate-y-1/2 z-50 hidden xl:flex flex-col items-center gap-6 pointer-events-none">
+        <div className="w-px h-16 bg-current opacity-[0.06]" />
+        <span className="text-[8px] font-medium tracking-[0.45em] uppercase [writing-mode:vertical-rl] opacity-[0.18] text-center">
+          EST. 2026 · VEN'S ATELIER
         </span>
-        <div className="w-[1px] h-24 bg-current opacity-10" />
+        <div className="w-px h-16 bg-current opacity-[0.06]" />
       </div>
 
       <header className="fixed top-0 left-0 w-full z-50 px-6 py-8 flex justify-between items-end mix-blend-difference text-white pointer-events-none">
@@ -1037,7 +915,7 @@ export default function App() {
           <span className="text-[10px] font-medium tracking-[0.2em] uppercase opacity-60">Ven's</span>
           <h1 className="text-xl font-display font-bold tracking-tighter">ATELIER.</h1>
         </div>
-        <nav className="hidden md:flex items-center gap-12 text-[11px] font-medium tracking-widest uppercase pointer-events-auto">
+        <nav className="hidden md:flex items-center gap-10 text-[11px] font-medium tracking-widest uppercase pointer-events-auto">
           <button 
             onClick={handleThemeToggle} 
             className="hover:opacity-50 transition-opacity flex items-center gap-2"
@@ -1193,69 +1071,62 @@ export default function App() {
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 border-[20px] border-white/10 pointer-events-none" />
-                <div 
-                  style={{ transform: "translateZ(40px)" }}
-                  className="absolute bottom-6 right-6 bg-[var(--bg)] p-4 flex flex-col gap-1 min-w-[140px] shadow-xl border border-current border-opacity-5"
-                >
-                  <span className="text-[9px] font-bold tracking-widest uppercase opacity-40">Top Skills</span>
-                  <LatestTicker />
-                </div>
               </motion.div>
             </TiltCard>
           </div>
         </div>
       </section>
 
-      <div className="bg-black text-white py-4 overflow-hidden border-y border-white/10 relative z-10">
+      <div
+        className="py-3 overflow-hidden relative z-10"
+        style={{ backgroundColor: "var(--marquee-bg)", color: "var(--marquee-fg)" }}
+      >
         <motion.div 
           animate={{ x: [0, -1000] }}
-          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-          className="flex whitespace-nowrap gap-20 text-[10px] font-bold tracking-[0.5em] uppercase"
+          transition={{ duration: 28, repeat: Infinity, ease: "linear" }}
+          className="flex whitespace-nowrap gap-16 text-[10px] font-medium tracking-[0.45em] uppercase"
         >
           <span>Visual Identity</span>
-          <span>✦</span>
+          <span aria-hidden>·</span>
           <span>Creative Dev</span>
-          <span>✦</span>
+          <span aria-hidden>·</span>
           <span>3D & WebGL</span>
-          <span>✦</span>
+          <span aria-hidden>·</span>
           <span>Ven's Gallery</span>
-          <span>✦</span>
+          <span aria-hidden>·</span>
           <span>Est. 2026</span>
-          <span>✦</span>
+          <span aria-hidden>·</span>
           <span>Visual Identity</span>
-          <span>✦</span>
+          <span aria-hidden>·</span>
           <span>Creative Dev</span>
-          <span>✦</span>
+          <span aria-hidden>·</span>
           <span>3D & WebGL</span>
-          <span>✦</span>
+          <span aria-hidden>·</span>
           <span>Ven's Gallery</span>
-          <span>✦</span>
+          <span aria-hidden>·</span>
           <span>Est. 2026</span>
         </motion.div>
       </div>
 
-      <section className="gallery-section relative h-[400vh] bg-black text-white z-10" ref={containerRef}>
-        <div className="sticky top-0 h-screen flex flex-col justify-center overflow-hidden pt-32 pb-32">
-          <div className="px-6 mb-8 md:mb-12 flex flex-col md:flex-row justify-between items-start md:items-end max-w-7xl mx-auto w-full gap-6 md:gap-8">
+      <section className="gallery-section relative h-[400vh] bg-[#0C0C0B] text-white z-10" ref={containerRef}>
+        <div className="sticky top-0 h-screen flex flex-col justify-center overflow-hidden pt-32 pb-28">
+          <div className="px-6 mb-8 md:mb-10 flex flex-col md:flex-row justify-between items-start md:items-end max-w-7xl mx-auto w-full gap-6 md:gap-8">
             <div>
               <span className="text-[10px] font-bold tracking-[0.4em] uppercase opacity-40 mb-2 block">
                 Selected Works
               </span>
-              <h2 className="text-5xl md:text-7xl font-display font-bold tracking-tighter mb-6">
+              <h2 className="text-5xl md:text-7xl font-display font-bold tracking-tighter mb-8">
                 GALLERY.
               </h2>
               
               {categories.length > 0 && (
-                <div className="flex flex-wrap gap-3">
+                <div className="flex flex-wrap gap-x-6 gap-y-3">
                   {categories.map((cat) => (
                     <button
                       key={cat}
                       onClick={() => handleCategoryChange(cat)}
-                      className={`text-[10px] font-bold tracking-widest uppercase px-6 py-3 border transition-all duration-300 ${
-                        selectedCategory === cat 
-                          ? "bg-white text-black border-white" 
-                          : "bg-transparent text-white/40 border-white/10 hover:border-white/30"
-                      }`}
+                      data-active={selectedCategory === cat}
+                      className="filter-tab text-[10px] font-bold tracking-[0.22em] uppercase"
                     >
                       {cat}
                     </button>
@@ -1264,17 +1135,17 @@ export default function App() {
               )}
             </div>
             <div className="hidden md:flex flex-col items-end gap-2">
-              <span className="text-[10px] font-medium tracking-widest uppercase opacity-40">Scroll to Explore</span>
-              <div className="w-32 h-[1px] bg-white/20 relative overflow-hidden">
+              <span className="text-[10px] font-medium tracking-widest uppercase opacity-40">(Scroll)</span>
+              <div className="w-28 h-px bg-white/15 relative overflow-hidden">
                 <motion.div 
                   style={{ scaleX: scrollYProgress }}
-                  className="absolute inset-0 bg-white origin-left"
+                  className="absolute inset-0 bg-[var(--accent)] origin-left"
                 />
               </div>
             </div>
           </div>
 
-          <motion.div ref={scrollRef} style={{ x }} className="flex gap-8 px-6 md:px-[10vw] relative w-fit">
+          <motion.div ref={scrollRef} style={{ x }} className="flex gap-6 md:gap-8 px-6 md:px-[10vw] relative w-fit">
             <AnimatePresence mode="popLayout">
               {filteredPosters.map((poster, i) => (
                 <WorkCard 
@@ -1288,13 +1159,13 @@ export default function App() {
             
             <motion.div 
               data-flip-id="end-card"
-              className="gallery-card flex-shrink-0 w-[75vw] md:w-[450px] lg:w-[500px] aspect-[3/4] max-h-[55vh] md:max-h-[60vh] flex flex-col items-center justify-center border border-white/10 group cursor-pointer"
+              className="gallery-card flex-shrink-0 w-[72vw] md:w-[420px] lg:w-[480px] aspect-[3/4] max-h-[58vh] md:max-h-[62vh] flex flex-col items-center justify-center border border-white/10 group cursor-pointer"
             >
               <motion.div 
-                whileHover={{ scale: 1.1, rotate: 90 }}
-                className="w-20 h-20 rounded-full border border-white/20 flex items-center justify-center mb-6"
+                whileHover={{ scale: 1.08, rotate: 90 }}
+                className="w-16 h-16 rounded-full border border-white/20 flex items-center justify-center mb-6"
               >
-                <Plus size={32} />
+                <Plus size={28} />
               </motion.div>
               <span className="text-sm font-display font-bold tracking-widest uppercase group-hover:opacity-50 transition-opacity">
                 View All Works
@@ -1304,64 +1175,72 @@ export default function App() {
         </div>
       </section>
 
-      <section ref={infoRef} className="py-32 px-6 relative z-10">
-        <div className="max-w-7xl mx-auto flex flex-col gap-32">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-20 items-start">
-            <div>
+      <section ref={infoRef} className="py-28 md:py-36 px-6 relative z-10">
+        <div className="max-w-7xl mx-auto flex flex-col gap-24 md:gap-32">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-16 items-start">
+            <div className="md:col-span-7">
               <span className="text-[11px] font-bold tracking-[0.3em] uppercase opacity-30 mb-8 block">
                 Philosophy
               </span>
               <h2 className="text-4xl md:text-6xl font-display font-bold leading-[0.9] tracking-tighter mb-10 uppercase">
                 when obsession <span className="italic font-serif font-normal lowercase">becomes</span> craft.
               </h2>
-              <p className="text-xl font-light leading-relaxed opacity-60 max-w-lg">
-                This gallery is a record of decisions: design choices, technical solutions, creative experiments. 
-                <br />
-                Some are finished. Some are still evolving. 
-                <br />
-                All of them has a backstory when they were made.
+              <p className="text-lg md:text-xl font-light leading-relaxed opacity-60 max-w-lg">
+                This gallery is a record of decisions: design choices, technical solutions, creative development.
+                <br /><br />
+                Some are still evolving as I learn more about modern stacks.
+                <br /><br />
+                I equally love all of them :D
               </p>
               <div className="mt-12">
-                <blockquote className="text-s font-serif italic opacity-50 border-l-2 border-current pl-6 mb-4">
+                <blockquote className="font-serif italic opacity-50 border-l-2 border-[var(--accent)] pl-6 mb-4">
                   "One should either be a work of art, or wear a work of art." — Oscar Wilde
                 </blockquote>
                 <LastUpdated />
               </div>
             </div>
-            <div className="flex flex-col justify-start gap-1 pt-13">
-              <div className="flex flex-col md:flex-row gap-12 md:gap-20 items-start">
-                <div className="flex flex-col gap-8">
-                  <VisitorCounter />
-                  <div>
-                    <span className="text-[10px] font-bold tracking-widest uppercase block mb-4 opacity-40">Location</span>
-                    <div className="flex flex-col gap-2">
-                      <p className="text-sm font-medium opacity-60">
-                        Kota Kinabalu,<br />
-                        Sabah
-                      </p>
-                      <LocalTime />
-                    </div>
-                  </div>
-                </div>
 
-                <div className="h-px md:h-75 w-full md:w-px bg-current opacity-10" />
-
-                <div className="flex flex-col gap-8">
-                  <div>
-                    <span className="text-[10px] font-bold tracking-widest uppercase block mb-4 opacity-40">Ven's Terminal!</span>
-                    <TerminalHobbies />
-                  </div>
-                </div>
-              </div>
-
+            <div className="md:col-span-5 md:pt-16 flex flex-col">
+              <span className="text-[10px] font-bold tracking-widest uppercase block mb-4 opacity-40">Contact</span>
+              <h3 className="text-3xl md:text-4xl font-display font-bold tracking-tighter leading-none mb-8">
+                Let's make something worth keeping.
+              </h3>
               <MagneticCTA>
                 <motion.a 
-                  href="mailto:venicevkx@gmail.com"
-                  className="flex items-center justify-between gap-4 text-2xl font-display font-bold tracking-tighter px-8 py-6 border border-current border-opacity-30 transition-all duration-500 group bg-[var(--bg)] text-[var(--text)] hover:bg-[var(--text)] hover:text-[var(--bg)] hover:shadow-lg"
+                  href="mailto:venvkx@gmail.com"
+                  className="inline-flex items-center gap-4 text-2xl md:text-4xl font-display font-bold tracking-tighter text-[var(--email)] hover:opacity-70 transition-opacity"
                 >
-                  VENICEVKX@GMAIL.COM <ArrowRight className="group-hover:translate-x-2 transition-transform" />
+                  venvkx@gmail.com
+                  <ArrowRight className="shrink-0" size={28} />
                 </motion.a>
               </MagneticCTA>
+
+              <div className="relative mt-10">
+                <VisitorCounter />
+                <button
+                  type="button"
+                  onClick={() => setIsTerminalOpen((open) => !open)}
+                  className="flex items-center gap-3 text-[10px] font-bold tracking-[0.3em] uppercase opacity-40 hover:opacity-80 transition-opacity"
+                  aria-expanded={isTerminalOpen}
+                >
+                  <Terminal size={12} />
+                  {isTerminalOpen ? "Close Terminal" : "Terminal"}
+                </button>
+
+                <AnimatePresence>
+                  {isTerminalOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 8 }}
+                      transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
+                      className="absolute left-0 top-full z-30 mt-6 flex flex-col gap-8 items-start bg-[var(--bg)] pr-4 pb-4"
+                    >
+                      <TerminalHobbies />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
             </div>
           </div>
         </div>

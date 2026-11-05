@@ -6,7 +6,7 @@
     "year": "Oct. 2026",
     "category": "Creative Dev",
     "image": "/lastsong/lastsong.png",
-    "description": "2D pixel art exploration platformer mobile game that combines stealth mechanics to collect music notes in assembling the Last Song.",
+    "description": "2D pixel art exploration platformer mobile game that combines stealth mechanics to collect music notes in assembling the Last Song. Entities are built with adaptive mechanics based on player's movement and actions to predict their next move.",
     "stack": ["GDScript", "Godot"],
     "demoUrl": null,
     "images": [

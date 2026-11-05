@@ -3,35 +3,45 @@
 
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Space+Grotesk", sans-serif;
+  --font-display: "Space Grotesk", sans-serif;
   --font-serif: "Playfair Display", serif;
+  --color-accent: var(--accent);
 }
 
 @layer base {
   :root {
-    --bg: #F5F5F3;
-    --text: #1A1A1A;
-    --text-muted: rgba(26, 26, 26, 0.6);
-    --text-dim: rgba(26, 26, 26, 0.3);
-    --border: rgba(26, 26, 26, 0.1);
+    --bg: #F1F0EC;
+    --text: #141413;
+    --text-muted: rgba(20, 20, 19, 0.6);
+    --text-dim: rgba(20, 20, 19, 0.3);
+    --border: rgba(20, 20, 19, 0.1);
+    --accent: #2F5D50;
+    --email: #C45B7A;
+    --marquee-bg: #1C1C1A;
+    --marquee-fg: rgba(241, 240, 236, 0.55);
   }
 
   html.dark {
-    --bg: #0A0A0A;
-    --text: #F5F5F3;
-    --text-muted: rgba(245, 245, 243, 0.6);
-    --text-dim: rgba(245, 245, 243, 0.3);
-    --border: rgba(245, 245, 243, 0.1);
+    --bg: #0C0C0B;
+    --text: #F1F0EC;
+    --text-muted: rgba(241, 240, 236, 0.6);
+    --text-dim: rgba(241, 240, 236, 0.3);
+    --border: rgba(241, 240, 236, 0.1);
+    --accent: #6FA892;
+    --email: #F4B8C9;
+    --marquee-bg: #161615;
+    --marquee-fg: rgba(241, 240, 236, 0.4);
   }
 
   html, body {
     @apply relative antialiased transition-colors duration-500;
     background-color: var(--bg);
     color: var(--text);
+    font-family: var(--font-sans);
   }
 
   ::selection {
-    background-color: var(--text);
+    background-color: var(--accent);
     color: var(--bg);
   }
 }
@@ -52,7 +62,7 @@
   background-color: var(--text);
   border-radius: 50%;
   z-index: 9999;
-  mix-blend-difference: difference;
+  mix-blend-mode: difference;
 }
 
 .cursor-ring {
@@ -65,7 +75,7 @@
   border: 1px solid var(--text);
   border-radius: 50%;
   z-index: 9998;
-  mix-blend-difference: difference;
+  mix-blend-mode: difference;
   transition: width 0.3s ease, height 0.3s ease, background-color 0.3s ease;
   display: flex;
   align-items: center;
@@ -84,7 +94,7 @@
   height: 100%;
   pointer-events: none;
   z-index: 9997;
-  opacity: 0.05;
+  opacity: 0.04;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
 }
 
@@ -119,13 +129,11 @@
   -webkit-overflow-scrolling: touch;
 }
 
-/* Ensure modal content can scroll properly */
 .flex-1.overflow-y-auto {
   overflow-y: auto !important;
   -webkit-overflow-scrolling: touch !important;
 }
 
-/* Ensure custom cursor works in modal scrollable areas */
 @media (pointer: fine) {
   .modal-container,
   .modal-content {
@@ -148,14 +156,12 @@
     cursor: text !important;
   }
   
-  /* Ensure scrollable areas can receive wheel events */
   .flex-1.overflow-y-auto,
   .overflow-y-scroll,
   .modal-scrollable {
     pointer-events: auto !important;
   }
   
-  /* Force cursor hidden on all scrollbar elements */
   *::-webkit-scrollbar,
   *::-webkit-scrollbar-track,
   *::-webkit-scrollbar-thumb,
@@ -165,7 +171,6 @@
   }
 }
 
-/* Custom scrollbar styling */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -185,7 +190,6 @@
   opacity: 0.4;
 }
 
-/* Ensure scrollbar thumb doesn't show default cursor */
 ::-webkit-scrollbar-thumb {
   cursor: none !important;
 }
@@ -194,13 +198,11 @@
   cursor: none !important;
 }
 
-/* Firefox scrollbar styling */
 * {
   scrollbar-width: thin;
   scrollbar-color: currentColor transparent;
 }
 
-/* Enhanced scrollbar for modal content */
 .modal-scrollable::-webkit-scrollbar-thumb {
   opacity: 0.15;
   cursor: none !important;
@@ -213,4 +215,29 @@
 
 .modal-scrollable::-webkit-scrollbar-track {
   cursor: none !important;
+}
+
+.filter-tab {
+  position: relative;
+  padding: 0.35rem 0;
+  color: rgba(255, 255, 255, 0.35);
+  transition: color 0.3s ease;
+}
+
+.filter-tab:hover {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.filter-tab[data-active="true"] {
+  color: #fff;
+}
+
+.filter-tab[data-active="true"]::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: currentColor;
 }
