@@ -219,13 +219,12 @@ const WorkCard: React.FC<PosterCardProps> = ({ poster, index, onOpenDetail }) =>
   return (
     <motion.div 
       layout
-      initial={{ opacity: 0, scale: 0.9 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.9 }}
+      initial={{ opacity: 0, y: 24 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 24 }}
       onClick={() => onOpenDetail(poster)}
-      whileHover={{ scale: 1.015 }}
       transition={{ 
-        duration: 0.4, 
+        duration: 0.45, 
         ease: [0.23, 1, 0.32, 1]
       }}
       className="gallery-card group relative flex-shrink-0 w-[72vw] md:w-[420px] lg:w-[480px] aspect-[3/4] max-h-[58vh] md:max-h-[62vh] overflow-hidden bg-[#111] cursor-pointer z-10"
@@ -241,7 +240,7 @@ const WorkCard: React.FC<PosterCardProps> = ({ poster, index, onOpenDetail }) =>
           loading={index < 3 ? "eager" : "lazy"}
           decoding="async"
           referrerPolicy="no-referrer"
-          className="w-full h-full object-cover grayscale contrast-[0.95] transition-[filter,transform] duration-700 ease-out scale-105 group-hover:grayscale-0 group-hover:contrast-100 group-hover:scale-100"
+          className="w-full h-full object-cover grayscale transition-[filter] duration-500 ease-out will-change-[filter] group-hover:grayscale-0"
         />
 
         <div className="absolute inset-x-0 bottom-0 p-6 md:p-8 bg-gradient-to-t from-black/75 via-black/25 to-transparent">
