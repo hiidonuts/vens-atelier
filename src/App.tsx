@@ -1188,7 +1188,9 @@ export default function App() {
                 Philosophy
               </span>
               <h2 className="text-4xl md:text-6xl font-display font-bold leading-[0.9] tracking-tighter mb-10 uppercase">
-                when obsession <span className="italic font-serif font-normal lowercase">becomes</span> craft.
+                when obsession 
+                <br />
+                <span className="italic font-serif font-normal lowercase">becomes</span> craft.
               </h2>
               <p className="text-lg md:text-xl font-light leading-relaxed opacity-60 max-w-lg">
                 This gallery is a record of decisions: design choices, technical solutions, creative development.
