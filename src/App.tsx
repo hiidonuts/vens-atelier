@@ -1200,8 +1200,10 @@ export default function App() {
               </div>
             </div>
 
-            <div className="md:col-span-5 md:pt-16 flex flex-col">
-              <span className="text-[10px] font-bold tracking-widest uppercase block mb-4 opacity-40">Contact</span>
+            <div className="md:col-span-5 flex flex-col">
+              <span className="text-[11px] font-bold tracking-[0.3em] uppercase opacity-30 mb-8 block">
+                Contact
+              </span>
               <h3 className="text-3xl md:text-4xl font-display font-bold tracking-tighter leading-none mb-8">
                 Let's make something worth keeping.
               </h3>
