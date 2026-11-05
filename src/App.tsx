@@ -207,44 +207,10 @@ interface StackTagProps {
 }
 
 const StackTag = ({ tech }: StackTagProps) => {
-  const [isHovered, setIsHovered] = useState(false);
-  
-  const getTechDescription = (t: string) => {
-    const descriptions: Record<string, string> = {
-      "React": "Component-based architecture for scalable UI.",
-      "GSAP": "High-performance animations for complex sequences.",
-      "Framer Motion": "Declarative animations for smooth interactions.",
-      "TypeScript": "Type safety for robust and maintainable code.",
-      "Tailwind": "Utility-first CSS for rapid, consistent styling.",
-      "Three.js": "3D rendering for immersive web experiences.",
-      "Next.js": "Server-side rendering and optimized performance."
-    };
-    return descriptions[t] || "Chosen for its reliability and performance.";
-  };
-
   return (
-    <div className="relative">
-      <span 
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-        className="text-[9px] font-bold tracking-widest uppercase px-3 py-1.5 border border-current border-opacity-10 cursor-help hover:bg-current hover:text-[var(--bg)] transition-colors"
-      >
-        {tech}
-      </span>
-      <AnimatePresence>
-        {isHovered && (
-          <motion.div 
-            initial={{ opacity: 0, y: 10, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 10, scale: 0.95 }}
-            className="absolute bottom-full left-0 mb-3 w-48 p-3 bg-[var(--text)] text-[var(--bg)] text-[10px] font-medium leading-relaxed shadow-2xl z-50 pointer-events-none"
-          >
-            <div className="absolute bottom-0 left-4 translate-y-1/2 rotate-45 w-2 h-2 bg-[var(--text)]" />
-            {getTechDescription(tech)}
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
+    <span className="text-[9px] font-bold tracking-widest uppercase px-3 py-1.5 border border-current border-opacity-10">
+      {tech}
+    </span>
   );
 };
 
@@ -331,8 +297,8 @@ const WorkCard: React.FC<PosterCardProps> = ({ poster, index, onOpenDetail }) =>
             {poster.description}
           </p>
 
-          <div className="mt-auto flex justify-between items-end">
-            <div className="flex flex-wrap gap-2">
+          <div className="mt-auto relative">
+            <div className="flex flex-wrap gap-2 w-full pr-14">
               {poster.stack?.map((tech) => (
                 <span key={tech} className="text-[8px] font-bold tracking-widest uppercase px-2 py-1 border border-white/10 opacity-40">
                   {tech}
@@ -344,7 +310,7 @@ const WorkCard: React.FC<PosterCardProps> = ({ poster, index, onOpenDetail }) =>
                 e.stopPropagation();
                 onOpenDetail(poster);
               }}
-              className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all duration-300"
+              className="absolute bottom-0 right-0 w-10 h-10 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all duration-300"
             >
               <ArrowRight size={18} />
             </div>
@@ -841,26 +807,24 @@ const ProjectModal = ({ project, onClose }: { project: WorkItem | null, onClose:
             style={{ height: '60vh' }}
             onWheel={(e) => e.stopPropagation()}
           >
-            <div className="mb-12">
+            <div className="mb-12 max-w-4xl">
               <span className="text-[10px] font-bold tracking-[0.4em] uppercase opacity-40 mb-4 block">
                 {project.year} / {project.category}
               </span>
               <h2 className="text-4xl md:text-6xl font-display font-bold tracking-tighter leading-none mb-8">
                 {project.title}
               </h2>
-              <p className="text-lg font-light leading-relaxed opacity-70 max-w-4xl">
+              <p className="text-lg font-light leading-relaxed opacity-70">
                 {project.description}
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-12">
-              <div>
-                <span className="text-[10px] font-bold tracking-widest uppercase opacity-40 block mb-4">Stack</span>
-                <div className="flex flex-wrap gap-2">
-                  {project.stack?.map(tech => (
-                    <StackTag key={tech} tech={tech} />
-                  ))}
-                </div>
+            <div className="mb-12 max-w-4xl">
+              <span className="text-[10px] font-bold tracking-widest uppercase opacity-40 block mb-4">Stack</span>
+              <div className="flex flex-wrap gap-2">
+                {project.stack?.map(tech => (
+                  <StackTag key={tech} tech={tech} />
+                ))}
               </div>
             </div>
 

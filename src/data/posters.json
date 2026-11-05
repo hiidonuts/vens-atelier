@@ -3,26 +3,31 @@
     "id": 1,
     "type": "Projects",
     "title": "LAST SONG",
-    "year": "Oct. 2026  ",
+    "year": "Oct. 2026",
     "category": "Creative Dev",
     "image": "/lastsong/lastsong.png",
     "description": "2D pixel art exploration platformer mobile game that combines stealth mechanics to collect music notes in assembling the Last Song.",
     "stack": ["GDScript", "Godot"],
     "demoUrl": null,
     "images": [
-      "/lastsong/lastsong.png"
+      "/lastsong/lastsong.png",
+      "/lastsong/lastsong1.png",
+      "/lastsong/lastsong2.png",
+      "/lastsong/lastsong3.png",
+      "/lastsong/lastsong4.png",
+      "/lastsong/lastsong5.png"
     ]
   },
   {
     "id": 2,
     "type": "Projects",
     "title": "KAIRO",
-    "year": "Mar. 2026 - Present",
+    "year": "Mar. 2026 - Oct. 2026",
     "category": "AI & Intelligent Systems",
     "image": "/kairo/kairo.png",
-    "description": "AI-powered Personal Knowledge Management (PKM) desktop application to upload study materials, generate summaries, knowledge graphs, flashcards and quizzes. Built in AI assistant to guide users on their study materials. Adapts to user's topic mastery level and proficiency to provide targeted learning routes. Gamification and levelling system to encourage consistent learning.",
-    "stack": ["Tauri", "PostgreSQL", "TypeScript", "FastAPI"],
-    "demoUrl": null,
+    "description": "AI-native Personal Knowledge Management (PKM) desktop study app with agentic + hybrid RAG retrieval (BM25, RRF, MMR) and adaptive personalised learning based on topic mastery level and FSRS algorithms. Developed a companion app for syncing and learning convenience with React Native.",
+    "stack": ["Tauri", "PostgreSQL", "TypeScript", "Hugging Face"],
+    "demoUrl": "https://kairo-landing.vercel.app/",
     "images": [
       "/kairo/kairo.png",
       "/kairo/kairo2.png",
@@ -41,7 +46,7 @@
     "year": "Mar. 2026",
     "category": "AI & Intelligent Systems",
     "image": "/lore/lore.png",
-    "description": "Desktop writing app that allows avid writers to develop story plots, organise chapters, scenes and versions, build character profiles, and generate story outlines. Read mode for a clean and immersive reading experience.",
+    "description": "Desktop writing app that allows avid writers to develop story plots, organise chapters, scenes and versions, build character profiles, and generate story outlines. Read Mode for a clean and immersive reading experience.",
     "stack": ["Drizzle ORM", "SQLite", "Tauri", "TipTap", "Zustand"],
     "demoUrl": null,
     "images": [
@@ -66,7 +71,7 @@
     ]
   },
   {
-    "id": 4,
+    "id": 5,
     "type": "Projects",
     "title": "PRESSED.",
     "year": "Feb. - Mar. 2026",
@@ -85,7 +90,7 @@
     ]
   },
   {
-    "id": 5,
+    "id": 6,
     "type": "Projects",
     "title": "ESSENCE",
     "year": "Jan. - Feb. 2026",
@@ -103,7 +108,7 @@
     ]
   },
   {
-    "id": 5,
+    "id": 7,
     "type": "Projects",
     "title": "SOLAR SYSTEM 3D",
     "year": "Feb. 2026",
@@ -117,7 +122,7 @@
     ]
   },
   {
-    "id": 7,
+    "id": 8,
     "type": "Projects",
     "title": "STUDENT FEEDBACK & SUGGESTION SYSTEM",
     "year": "Dec. 2025 - Jan. 2026",
@@ -132,7 +137,7 @@
     ]
   },
   {
-    "id": 8,
+    "id": 9,
     "type": "Projects",
     "title": "BLACK HOLE RAY-TRACING SIMULATION",
     "year": "Dec. 2025",
@@ -146,7 +151,7 @@
     ]
   },
   {
-    "id": 9,
+    "id": 10,
     "type": "Projects",
     "title": "NOWHERE",
     "year": "Aug. 2025",
@@ -161,7 +166,7 @@
     ]
   },
   {
-    "id": 10,
+    "id": 11,
     "type": "Projects",
     "title": "FERRY TERMINAL MANAGEMENT",
     "year": "Jul. 2025",
@@ -180,7 +185,7 @@
     ]
   },
   {
-    "id": 11,
+    "id": 12,
     "type": "Projects",
     "title": "SNACK ATLAS",
     "year": "Jun. - Jul. 2025",
@@ -195,7 +200,7 @@
     ]
   },
   {
-    "id": 12,
+    "id": 13,
     "type": "Projects",
     "title": "PROGRESS PACER",
     "year": "Jun. - Jul. 2025",
@@ -210,7 +215,7 @@
     ]
   },
   {
-    "id": 13,
+    "id": 14,
     "type": "Projects",
     "title": "LIMBO",
     "year": "Apr. 2025",
@@ -226,7 +231,7 @@
     ]
   },
   {
-    "id": 14,
+    "id": 15,
     "type": "Projects",
     "title": "ONLINE GROCERY SYSTEM",
     "year": "May 2024",
@@ -243,7 +248,7 @@
     ]
   },
   {
-    "id": 15,
+    "id": 16,
     "type": "Projects",
     "title": "ESPRESSO EMPORIUM",
     "year": "Apr. 2023",
@@ -260,7 +265,7 @@
     ]
   },
   {
-    "id": 16,
+    "id": 17,
     "type": "Projects",
     "title": "FOOD ODYSSEY",
     "year": "Jan. - Mar. 2025",
