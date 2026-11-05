@@ -2,6 +2,20 @@
   {
     "id": 1,
     "type": "Projects",
+    "title": "LAST SONG",
+    "year": "Oct. 2026  ",
+    "category": "Creative Dev",
+    "image": "/lastsong/lastsong.png",
+    "description": "2D pixel art exploration platformer mobile game that combines stealth mechanics to collect music notes in assembling the Last Song.",
+    "stack": ["GDScript", "Godot"],
+    "demoUrl": null,
+    "images": [
+      "/lastsong/lastsong.png"
+    ]
+  },
+  {
+    "id": 2,
+    "type": "Projects",
     "title": "KAIRO",
     "year": "Mar. 2026 - Present",
     "category": "AI & Intelligent Systems",
@@ -21,7 +35,7 @@
     ]
   },
   {
-    "id": 2,
+    "id": 3,
     "type": "Projects",
     "title": "LORE",
     "year": "Mar. 2026",
@@ -36,7 +50,7 @@
     ]
   },
   {
-    "id": 3,
+    "id": 4,
     "type": "Projects",
     "title": "VEN'S ATELIER",
     "year": "Feb. - Mar. 2026",
@@ -89,7 +103,7 @@
     ]
   },
   {
-    "id": 6,
+    "id": 5,
     "type": "Projects",
     "title": "SOLAR SYSTEM 3D",
     "year": "Feb. 2026",
