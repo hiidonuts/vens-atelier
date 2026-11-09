@@ -31,6 +31,7 @@ const getCursorTypeFromTarget = (target: Element | null): "default" | "view" | "
 };
 
 const CustomCursor = () => {
+  const [enabled, setEnabled] = useState(false);
   const [cursorType, setCursorType] = useState<"default" | "view" | "view-image" | "caret">("default");
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
@@ -39,6 +40,16 @@ const CustomCursor = () => {
   const cursorY = useSpring(mouseY, { damping: 30, stiffness: 800, mass: 0.2 });
 
   useEffect(() => {
+    const media = window.matchMedia("(pointer: fine)");
+    const sync = () => setEnabled(media.matches);
+    sync();
+    media.addEventListener("change", sync);
+    return () => media.removeEventListener("change", sync);
+  }, []);
+
+  useEffect(() => {
+    if (!enabled) return;
+
     const handleMouseMove = (e: MouseEvent) => {
       mouseX.set(e.clientX);
       mouseY.set(e.clientY);
@@ -71,7 +82,9 @@ const CustomCursor = () => {
       window.removeEventListener("mousedown", handleScrollbarInteraction);
       document.head.removeChild(style);
     };
-  }, []);
+  }, [enabled]);
+
+  if (!enabled) return null;
 
   return createPortal(
     <motion.div 
@@ -453,7 +466,7 @@ const TerminalHobbies = () => {
   };
 
   return (
-    <div className="w-[350px] h-[300px] flex flex-col shrink-0 terminal-container">
+    <div className="w-full max-w-[350px] h-[300px] flex flex-col shrink-0 terminal-container">
       <div ref={containerRef} className="bg-[var(--bg)] border border-current border-opacity-10 rounded-lg p-4 font-mono text-[11px] w-full h-[230px] shadow-2xl transition-colors duration-500 flex flex-col">
         <div className="flex gap-1.5 mb-3 shrink-0">
           <div className="w-2 h-2 rounded-full bg-red-500/50" />
@@ -1075,7 +1088,7 @@ export default function App() {
                   referrerPolicy="no-referrer"
                   className="w-full h-full object-cover"
                 />
-                <div className="absolute inset-0 border-[20px] border-white/10 pointer-events-none" />
+                <div className="absolute inset-0 border-[12px] md:border-[20px] border-white/10 pointer-events-none" />
               </motion.div>
             </TiltCard>
           </div>
@@ -1114,24 +1127,24 @@ export default function App() {
       </div>
 
       <section className="gallery-section relative h-[400vh] bg-[#0C0C0B] text-white z-10" ref={containerRef}>
-        <div className="sticky top-0 h-screen flex flex-col justify-center overflow-hidden pt-32 pb-28">
-          <div className="px-6 mb-8 md:mb-10 flex flex-col md:flex-row justify-between items-start md:items-end max-w-7xl mx-auto w-full gap-6 md:gap-8">
-            <div>
+        <div className="sticky top-0 h-screen flex flex-col justify-center overflow-hidden pt-24 pb-16 md:pt-32 md:pb-28">
+          <div className="px-6 mb-6 md:mb-10 flex flex-col md:flex-row justify-between items-start md:items-end max-w-7xl mx-auto w-full gap-4 md:gap-8">
+            <div className="w-full">
               <span className="text-[10px] font-bold tracking-[0.4em] uppercase opacity-40 mb-2 block">
                 Selected Works
               </span>
-              <h2 className="text-5xl md:text-7xl font-display font-bold tracking-tighter mb-8">
+              <h2 className="text-4xl sm:text-5xl md:text-7xl font-display font-bold tracking-tighter mb-6 md:mb-8">
                 GALLERY.
               </h2>
               
               {categories.length > 0 && (
-                <div className="flex flex-wrap gap-x-6 gap-y-3">
+                <div className="flex flex-wrap gap-x-4 gap-y-2 md:gap-x-6 md:gap-y-3 max-w-full">
                   {categories.map((cat) => (
                     <button
                       key={cat}
                       onClick={() => handleCategoryChange(cat)}
                       data-active={selectedCategory === cat}
-                      className="filter-tab text-[10px] font-bold tracking-[0.22em] uppercase"
+                      className="filter-tab text-[9px] md:text-[10px] font-bold tracking-[0.18em] md:tracking-[0.22em] uppercase"
                     >
                       {cat}
                     </button>
@@ -1180,8 +1193,8 @@ export default function App() {
         </div>
       </section>
 
-      <section ref={infoRef} className="py-28 md:py-36 px-6 relative z-10">
-        <div className="max-w-7xl mx-auto flex flex-col gap-24 md:gap-32">
+      <section ref={infoRef} className="py-20 md:py-36 px-6 relative z-10 overflow-x-clip">
+        <div className="max-w-7xl mx-auto flex flex-col gap-16 md:gap-32">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-16 items-start">
             <div className="md:col-span-7">
               <span className="text-[11px] font-bold tracking-[0.3em] uppercase opacity-30 mb-8 block">
@@ -1217,14 +1230,14 @@ export default function App() {
               <MagneticCTA>
                 <motion.a 
                   href="mailto:venvkx@gmail.com"
-                  className="inline-flex items-center gap-4 text-2xl md:text-4xl font-display font-bold tracking-tighter text-[var(--email)] hover:opacity-70 transition-opacity"
+                  className="inline-flex items-center gap-3 sm:gap-4 text-xl sm:text-2xl md:text-4xl font-display font-bold tracking-tighter text-[var(--email)] hover:opacity-70 transition-opacity break-all"
                 >
                   venvkx@gmail.com
-                  <ArrowRight className="shrink-0" size={28} />
+                  <ArrowRight className="shrink-0" size={24} />
                 </motion.a>
               </MagneticCTA>
 
-              <div className="relative mt-10">
+              <div className="mt-10">
                 <VisitorCounter />
                 <button
                   type="button"
@@ -1236,16 +1249,18 @@ export default function App() {
                   {isTerminalOpen ? "Close Terminal" : "Terminal"}
                 </button>
 
-                <AnimatePresence>
+                <AnimatePresence initial={false}>
                   {isTerminalOpen && (
                     <motion.div
-                      initial={{ opacity: 0, y: 8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: 8 }}
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
                       transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
-                      className="absolute left-0 top-full z-30 mt-6 flex flex-col gap-8 items-start bg-[var(--bg)] pr-4 pb-4"
+                      className="overflow-hidden"
                     >
-                      <TerminalHobbies />
+                      <div className="pt-6 pb-2 w-full max-w-[350px]">
+                        <TerminalHobbies />
+                      </div>
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -1255,11 +1270,11 @@ export default function App() {
         </div>
       </section>
 
-      <footer className="py-12 px-6 border-t border-current border-opacity-5 flex flex-col md:flex-row justify-between items-center gap-8 relative z-10">
+      <footer className="py-12 px-6 border-t border-current border-opacity-5 flex flex-col md:flex-row justify-between items-center gap-6 md:gap-8 relative z-10">
         <span className="text-[10px] font-bold tracking-[0.4em] uppercase opacity-30">
           © 2026 VEN'S ATELIER
         </span>
-        <div className="flex gap-12 text-[10px] font-bold tracking-widest uppercase">
+        <div className="flex flex-wrap justify-center gap-6 md:gap-12 text-[10px] font-bold tracking-widest uppercase">
           <a href="https://www.instagram.com/venvkx/" target="_blank" className="flex items-center gap-2 hover:opacity-100 opacity-40 transition-opacity group">
             <Instagram size={12} className="group-hover:scale-110 transition-transform" /> Instagram
           </a>
