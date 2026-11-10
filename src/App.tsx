@@ -940,8 +940,8 @@ export default function App() {
             {isDark ? <Sun size={14} /> : <Moon size={14} />}
             <span>{isDark ? 'Light' : 'Dark'}</span>
           </button>
-          <button onClick={() => scrollToSection(heroRef)} className="hover:opacity-50 transition-opacity">About</button>
-          <button onClick={() => scrollToSection(containerRef)} className="hover:opacity-50 transition-opacity">Gallery</button>
+          <button onClick={() => scrollToSection(heroRef)} className="hover:opacity-50 transition-opacity">Home</button>
+          <button onClick={() => scrollToSection(containerRef)} className="hover:opacity-50 transition-opacity">Projects</button>
           <button onClick={() => scrollToSection(infoRef)} className="hover:opacity-50 transition-opacity">Contact</button>
         </nav>
         <button 
@@ -965,13 +965,13 @@ export default function App() {
                 onClick={() => { scrollToSection(heroRef); setIsMenuOpen(false); }}
                 className="text-left"
               >
-                About
+                Home
               </button>
               <button 
                 onClick={() => { scrollToSection(containerRef); setIsMenuOpen(false); }}
                 className="text-left"
               >
-                Gallery
+                Projects
               </button>
               <button 
                 onClick={() => { scrollToSection(infoRef); setIsMenuOpen(false); }}
