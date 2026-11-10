@@ -1130,11 +1130,8 @@ export default function App() {
         <div className="sticky top-0 h-screen flex flex-col justify-center overflow-hidden pt-24 pb-16 md:pt-32 md:pb-28">
           <div className="px-6 mb-6 md:mb-10 flex flex-col md:flex-row justify-between items-start md:items-end max-w-7xl mx-auto w-full gap-4 md:gap-8">
             <div className="w-full">
-              <span className="text-[10px] font-bold tracking-[0.4em] uppercase opacity-40 mb-2 block">
-                Selected Works
-              </span>
               <h2 className="text-4xl sm:text-5xl md:text-7xl font-display font-bold tracking-tighter mb-6 md:mb-8">
-                GALLERY.
+                PROJECTS.
               </h2>
               
               {categories.length > 0 && (
@@ -1193,7 +1190,10 @@ export default function App() {
         </div>
       </section>
 
-      <section ref={infoRef} className="py-20 md:py-36 px-6 relative z-10 overflow-x-clip">
+      <section
+        ref={infoRef}
+        className={`py-20 md:py-36 px-6 relative ${isTerminalOpen ? "z-20" : "z-10"}`}
+      >
         <div className="max-w-7xl mx-auto flex flex-col gap-16 md:gap-32">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-16 items-start">
             <div className="md:col-span-7">
@@ -1237,7 +1237,7 @@ export default function App() {
                 </motion.a>
               </MagneticCTA>
 
-              <div className="mt-10">
+              <div className="relative mt-10">
                 <VisitorCounter />
                 <button
                   type="button"
@@ -1249,18 +1249,16 @@ export default function App() {
                   {isTerminalOpen ? "Close Terminal" : "Terminal"}
                 </button>
 
-                <AnimatePresence initial={false}>
+                <AnimatePresence>
                   {isTerminalOpen && (
                     <motion.div
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: "auto" }}
-                      exit={{ opacity: 0, height: 0 }}
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 8 }}
                       transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
-                      className="overflow-hidden"
+                      className="absolute left-0 top-full z-30 mt-6 w-full max-w-[350px] bg-[var(--bg)] pb-4"
                     >
-                      <div className="pt-6 pb-2 w-full max-w-[350px]">
-                        <TerminalHobbies />
-                      </div>
+                      <TerminalHobbies />
                     </motion.div>
                   )}
                 </AnimatePresence>
