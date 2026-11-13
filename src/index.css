@@ -1,10 +1,11 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Space+Grotesk:wght@300;400;500;600;700&family=ZCOOL+XiaoWei&display=swap');
 @import "tailwindcss";
 
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Space Grotesk", sans-serif;
   --font-serif: "Playfair Display", serif;
+  --font-chinese: "ZCOOL XiaoWei", "Playfair Display", serif;
   --color-accent: var(--accent);
 }
 
@@ -15,7 +16,7 @@
     --text-muted: rgba(20, 20, 19, 0.6);
     --text-dim: rgba(20, 20, 19, 0.3);
     --border: rgba(20, 20, 19, 0.1);
-    --accent: #2F5D50;
+    --accent: #3A3A37;
     --email: #C45B7A;
     --marquee-bg: #1C1C1A;
     --marquee-fg: rgba(241, 240, 236, 0.55);
@@ -27,7 +28,7 @@
     --text-muted: rgba(241, 240, 236, 0.6);
     --text-dim: rgba(241, 240, 236, 0.3);
     --border: rgba(241, 240, 236, 0.1);
-    --accent: #6FA892;
+    --accent: #C8C8C4;
     --email: #F4B8C9;
     --marquee-bg: #161615;
     --marquee-fg: rgba(241, 240, 236, 0.4);
@@ -41,12 +42,21 @@
   }
 
   ::selection {
-    background-color: var(--accent);
-    color: var(--bg);
+    background-color: color-mix(in srgb, var(--text) 18%, transparent);
+    color: var(--text);
   }
 }
 
-@media (pointer: fine) {
+/* Hide system cursor on smaller screens; desktop uses the custom cursor instead */
+@media (max-width: 1023px) {
+  *,
+  *::before,
+  *::after {
+    cursor: none !important;
+  }
+}
+
+@media (pointer: fine) and (min-width: 1024px) {
   * {
     cursor: none !important;
   }
@@ -134,7 +144,7 @@
   -webkit-overflow-scrolling: touch !important;
 }
 
-@media (pointer: fine) {
+@media (pointer: fine) and (min-width: 1024px) {
   .modal-container,
   .modal-content {
     cursor: none !important;
@@ -171,49 +181,73 @@
   }
 }
 
-::-webkit-scrollbar {
+/* Native page scrollbar hidden — frosted overlay handles it */
+html {
+  scrollbar-width: none;
+}
+
+html::-webkit-scrollbar {
+  display: none;
+}
+
+.frosted-scrollbar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 8px;
+  z-index: 80;
+  background: color-mix(in srgb, var(--bg) 42%, transparent);
+  backdrop-filter: blur(18px) saturate(1.4);
+  -webkit-backdrop-filter: blur(18px) saturate(1.4);
+  border-left: 1px solid color-mix(in srgb, var(--text) 6%, transparent);
+  pointer-events: auto;
+}
+
+.frosted-scrollbar-thumb {
+  position: absolute;
+  top: 0;
+  left: 1px;
+  right: 1px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--text) 28%, transparent);
+  border: 1px solid color-mix(in srgb, var(--text) 8%, transparent);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: background 0.2s ease;
+  will-change: transform;
+}
+
+.frosted-scrollbar-thumb:hover {
+  background: color-mix(in srgb, var(--text) 42%, transparent);
+}
+
+/* Nested / modal scroll areas keep a simple native bar */
+.modal-scrollable::-webkit-scrollbar,
+.overflow-y-scroll::-webkit-scrollbar,
+.flex-1.overflow-y-auto::-webkit-scrollbar {
   width: 6px;
-  height: 6px;
 }
 
-::-webkit-scrollbar-track {
+.modal-scrollable::-webkit-scrollbar-track,
+.overflow-y-scroll::-webkit-scrollbar-track,
+.flex-1.overflow-y-auto::-webkit-scrollbar-track {
   background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: currentColor;
-  border-radius: 3px;
-  opacity: 0.2;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  opacity: 0.4;
-}
-
-::-webkit-scrollbar-thumb {
   cursor: none !important;
 }
 
-::-webkit-scrollbar-track {
+.modal-scrollable::-webkit-scrollbar-thumb,
+.overflow-y-scroll::-webkit-scrollbar-thumb,
+.flex-1.overflow-y-auto::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--text) 22%, transparent);
+  border-radius: 999px;
   cursor: none !important;
 }
 
-* {
-  scrollbar-width: thin;
-  scrollbar-color: currentColor transparent;
-}
-
-.modal-scrollable::-webkit-scrollbar-thumb {
-  opacity: 0.15;
-  cursor: none !important;
-}
-
-.modal-scrollable::-webkit-scrollbar-thumb:hover {
-  opacity: 0.3;
-  cursor: none !important;
-}
-
-.modal-scrollable::-webkit-scrollbar-track {
+.modal-scrollable::-webkit-scrollbar-thumb:hover,
+.overflow-y-scroll::-webkit-scrollbar-thumb:hover,
+.flex-1.overflow-y-auto::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, var(--text) 36%, transparent);
   cursor: none !important;
 }
 
@@ -240,4 +274,27 @@
   bottom: 0;
   height: 1px;
   background: currentColor;
+}
+
+@keyframes typeCaret {
+  0%, 45% { opacity: 0.7; }
+  50%, 100% { opacity: 0; }
+}
+
+@keyframes marquee-scroll {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-50%, 0, 0); }
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+  animation: marquee-scroll 45s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
 }

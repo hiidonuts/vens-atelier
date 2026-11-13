@@ -1,6 +1,18 @@
-import { db } from '../firebase-config.js';
-import { doc, getDoc, setDoc, updateDoc, arrayUnion } from 'firebase/firestore';
 import { randomBytes } from 'crypto';
+import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'fs';
+import { dirname, join } from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const LOCAL_STORE_PATH = join(__dirname, '..', '.data', 'visitor-count.json');
+const PROD_PEEK_URL = 'https://vens-atelier.vercel.app/api/visitor-count?peek=1';
+
+function hasFirebaseConfig() {
+  return Boolean(
+    process.env.FIREBASE_PROJECT_ID?.trim() &&
+      process.env.FIREBASE_API_KEY?.trim()
+  );
+}
 
 function generateSessionId() {
   return 'session_' + randomBytes(16).toString('hex');
@@ -51,24 +63,164 @@ function setCorsHeaders(req, res) {
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Visitor-ID, X-Visitor-Session');
 }
 
-async function initializeVisitorCounter() {
-  try {
-    const docRef = doc(db, 'stats', 'visitor_count');
-    const docSnap = await getDoc(docRef);
+function isPeekRequest(req) {
+  const url = new URL(req.url || '/', 'http://localhost');
+  return url.searchParams.get('peek') === '1';
+}
 
-    if (!docSnap.exists()) {
-      await setDoc(docRef, {
-        count: 0,
-        unique_sessions: [],
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      });
-      console.log('Visitor counter initialized');
+function readLocalStore() {
+  try {
+    if (!existsSync(LOCAL_STORE_PATH)) {
+      return { count: 0, unique_sessions: [] };
+    }
+    return JSON.parse(readFileSync(LOCAL_STORE_PATH, 'utf8'));
+  } catch {
+    return { count: 0, unique_sessions: [] };
+  }
+}
+
+function writeLocalStore(data) {
+  mkdirSync(dirname(LOCAL_STORE_PATH), { recursive: true });
+  writeFileSync(LOCAL_STORE_PATH, JSON.stringify(data, null, 2));
+}
+
+async function peekProductionCount() {
+  try {
+    const upstream = await fetch(PROD_PEEK_URL, {
+      headers: { Accept: 'application/json' },
+    });
+    if (!upstream.ok) return null;
+    const data = await upstream.json();
+    // Only trust responses from the peek-capable API (avoids incrementing older deploys).
+    if (data?.message === 'Peek only' && typeof data.count === 'number') {
+      return data.count;
     }
   } catch (error) {
-    console.error('Error in initializeVisitorCounter:', error);
-    throw error;
+    console.warn('Production peek unavailable:', error.message);
   }
+  return null;
+}
+
+async function handleLocal(req, res, { peek }) {
+  // Opt-in: set VISITOR_PEEK_PRODUCTION=1 after peek is deployed, to show live count locally.
+  if (!peek && process.env.VISITOR_PEEK_PRODUCTION === '1') {
+    const productionCount = await peekProductionCount();
+    if (productionCount !== null) {
+      return res.status(200).json({
+        count: productionCount,
+        isNewVisitor: false,
+        sessionId: null,
+        isNewSession: false,
+        message: 'Local fallback via production peek',
+      });
+    }
+  }
+
+  const store = readLocalStore();
+  if (peek) {
+    return res.status(200).json({
+      count: store.count || 0,
+      isNewVisitor: false,
+      sessionId: null,
+      isNewSession: false,
+      message: 'Local peek',
+    });
+  }
+
+  let sessionId = getSessionId(req);
+  let isNewSession = false;
+  if (!sessionId) {
+    sessionId = generateSessionId();
+    isNewSession = true;
+    setSessionCookie(res, sessionId);
+  }
+
+  const uniqueSessions = new Set(store.unique_sessions || []);
+  let visitorCount = store.count || 0;
+  const isNewVisitor = !uniqueSessions.has(sessionId);
+
+  if (isNewVisitor) {
+    uniqueSessions.add(sessionId);
+    visitorCount += 1;
+    writeLocalStore({
+      count: visitorCount,
+      unique_sessions: [...uniqueSessions],
+      updated_at: new Date().toISOString(),
+    });
+  }
+
+  return res.status(200).json({
+    count: visitorCount,
+    isNewVisitor,
+    sessionId,
+    isNewSession,
+    message: 'Using local file storage (Firebase env missing)',
+  });
+}
+
+async function handleFirebase(req, res, { peek }) {
+  const { db } = await import('../firebase-config.js');
+  const { doc, getDoc, setDoc, updateDoc, arrayUnion } = await import('firebase/firestore');
+
+  const docRef = doc(db, 'stats', 'visitor_count');
+  let docSnap = await getDoc(docRef);
+
+  if (!docSnap.exists()) {
+    await setDoc(docRef, {
+      count: 0,
+      unique_sessions: [],
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    });
+    docSnap = await getDoc(docRef);
+  }
+
+  if (!docSnap.exists()) {
+    return res.status(500).json({ error: 'Database error' });
+  }
+
+  const visitorData = docSnap.data();
+  const visitorCount = visitorData.count || 0;
+
+  if (peek) {
+    return res.status(200).json({
+      count: visitorCount,
+      isNewVisitor: false,
+      sessionId: null,
+      isNewSession: false,
+      message: 'Peek only',
+    });
+  }
+
+  let sessionId = getSessionId(req);
+  let isNewSession = false;
+
+  if (!sessionId) {
+    sessionId = generateSessionId();
+    isNewSession = true;
+    setSessionCookie(res, sessionId);
+  }
+
+  const uniqueSessions = new Set(visitorData.unique_sessions || []);
+  let nextCount = visitorCount;
+  const isNewVisitor = !uniqueSessions.has(sessionId);
+
+  if (isNewVisitor) {
+    nextCount += 1;
+    await updateDoc(docRef, {
+      count: nextCount,
+      unique_sessions: arrayUnion(sessionId),
+      updated_at: new Date().toISOString(),
+    });
+  }
+
+  return res.status(200).json({
+    count: nextCount,
+    isNewVisitor,
+    sessionId,
+    isNewSession,
+    message: 'Using Firebase persistent storage',
+  });
 }
 
 export default async function handler(req, res) {
@@ -83,71 +235,14 @@ export default async function handler(req, res) {
       return res.status(405).json({ error: 'Method not allowed' });
     }
 
-    if (!process.env.FIREBASE_PROJECT_ID || !process.env.FIREBASE_API_KEY) {
-      console.error('Missing Firebase environment variables');
-      return res.status(500).json({ error: 'Server configuration error' });
+    const peek = isPeekRequest(req);
+
+    if (!hasFirebaseConfig()) {
+      console.warn('Firebase env missing/empty — using local fallback');
+      return handleLocal(req, res, { peek });
     }
 
-    let sessionId = getSessionId(req);
-    let isNewSession = false;
-
-    if (!sessionId) {
-      sessionId = generateSessionId();
-      isNewSession = true;
-      setSessionCookie(res, sessionId);
-      console.log('New session created:', sessionId);
-    }
-
-    console.log('Processing visitor session:', sessionId);
-
-    await initializeVisitorCounter();
-
-    let visitorData;
-    try {
-      const docRef = doc(db, 'stats', 'visitor_count');
-      const docSnap = await getDoc(docRef);
-
-      if (!docSnap.exists()) {
-        console.error('Visitor counter document not found');
-        return res.status(500).json({ error: 'Database error' });
-      }
-
-      visitorData = docSnap.data();
-    } catch (error) {
-      console.error('Error in database query:', error);
-      return res.status(500).json({ error: 'Database error', message: error.message });
-    }
-
-    const uniqueSessions = new Set(visitorData.unique_sessions || []);
-    let visitorCount = visitorData.count || 0;
-    const isNewVisitor = !uniqueSessions.has(sessionId);
-
-    if (isNewVisitor) {
-      uniqueSessions.add(sessionId);
-      visitorCount++;
-
-      try {
-        const docRef = doc(db, 'stats', 'visitor_count');
-        await updateDoc(docRef, {
-          count: visitorCount,
-          unique_sessions: arrayUnion(sessionId),
-          updated_at: new Date().toISOString(),
-        });
-
-        console.log('New visitor session', sessionId, 'added. Total count:', visitorCount);
-      } catch (error) {
-        console.error('Error updating database:', error);
-        return res.status(500).json({ error: 'Database update error', message: error.message });
-      }
-    }
-
-    res.status(200).json({
-      count: visitorCount,
-      isNewVisitor,
-      sessionId,
-      isNewSession,
-      message: 'Using Firebase persistent storage',
-    });
+    return await handleFirebase(req, res, { peek });
   } catch (error) {
     console.error('Visitor count error:', error);
     console.error('Error stack:', error.stack);
