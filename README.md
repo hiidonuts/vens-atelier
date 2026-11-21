@@ -56,40 +56,6 @@ An interactive portfolio website designed to showcase my creative projects and t
 | **Express** | Backend Server |
 | **SQLite** | Data Storage |
 
-
-## Getting Started
-
-### Prerequisites
-- Node.js (v18 or higher)
-- npm or yarn
-
-### Installation
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/hiidonuts/vens-atelier.git
-   cd vens-atelier
-   ```
-
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
-
-3. **Set up environment variables**
-   ```bash
-   cp .env.example .env
-   # Edit .env with your configuration
-   ```
-
-4. **Start the development server**
-   ```bash
-   npm run dev
-   ```
-
-5. **Open your browser**
-   Navigate to `http://localhost:5173`
-
 ---
 
 <div align="center">
