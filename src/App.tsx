@@ -1242,7 +1242,7 @@ export default function App() {
                   View More <ArrowDown size={14} className="group-hover:translate-y-1 transition-transform" />
                 </button>
                 <a
-                  href="/Venice%20Voo_Resume.pdf"
+                  href="/Venice%Voo%Khai%Xing_CV.pdf"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 text-[13px] font-medium tracking-widest uppercase opacity-50 hover:opacity-100 transition-opacity ml-2 sm:ml-0"
